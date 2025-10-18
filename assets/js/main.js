@@ -462,3 +462,36 @@ function smoothScroll() {
 
 // Initialize smooth scroll
 document.addEventListener('DOMContentLoaded', smoothScroll);
+
+// Initialize Swiper for products
+const productsSwiper = new Swiper('.products-swiper', {
+    // Optional parameters
+    loop: true,
+    spaceBetween: 20,
+    slidesPerView: 1,
+    centeredSlides: true,
+    autoplay: {
+        delay: 5000,
+        disableOnInteraction: false,
+    },
+    pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+    },
+    breakpoints: {
+        // when window width is >= 576px
+        576: {
+            slidesPerView: 1.2,
+        },
+        // when window width is >= 768px
+        768: {
+            slidesPerView: 1.5,
+        },
+        // when window width is >= 992px
+        992: {
+            slidesPerView: 1,
+            allowTouchMove: false,
+            enabled: false
+        }
+    }
+});
