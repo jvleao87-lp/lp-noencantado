@@ -280,6 +280,90 @@ a:hover {
     padding: 5rem 0;
 }
 
+/* Footer (Nó Encantado) */
+.site-footer {
+  background: radial-gradient(1200px 600px at 50% 0%, #FADCD9 0%, #F8F5F2 60%);
+  color: #5C4633;
+  font-family: 'Open Sans', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
+  position: relative;
+  border-top: 1px solid rgba(92,70,51,0.08);
+}
+
+/* Minimal single-line footer row */
+.footer-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: .75rem;
+}
+.footer-left { justify-self: start; }
+.footer-right { justify-self: end; display: inline-flex; align-items: center; gap: .5rem; }
+
+.site-footer .footer-logo {
+  height: 52px;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,0.04));
+}
+
+.footer-col-center, .footer-copy { text-align: center; }
+.footer-copy {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+}
+.footer-made { font-size: .95rem; opacity: .9; }
+
+.site-footer .social-link {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(243, 225, 221, 0.7); /* rosé translúcido */
+  color: #5C4633;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.site-footer .social-link i { color: #D3AFA3; font-size: 18px; }
+.site-footer .social-link:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(211,175,163,0.35);
+  background: #F9EDEA;
+}
+
+.site-footer .footer-quote {
+  font-family: 'Playfair Display', serif;
+  color: #5C4633;
+  font-size: 1.05rem;
+  margin: 0.5rem 0 0;
+}
+
+.site-footer .made-with {
+  color: #5C4633;
+  opacity: 0.9;
+}
+
+.site-footer .footer-cta {
+  background: #F9EDEA;
+  color: #5C4633;
+  border: 1px solid rgba(211,175,163,0.6);
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
+}
+
+.site-footer .footer-cta:hover { filter: brightness(1.02); }
+
+/* Responsivo: centralizar copy e empilhar visualmente mínimos */
+@media (max-width: 767.98px) {
+  .footer-row { grid-template-columns: 1fr; }
+  .footer-left { justify-self: center; margin-bottom: .25rem; }
+  .footer-right { display: none; }
+  .footer-copy { text-align: center; }
+  .site-footer .footer-cta { display: none; }
+}
+
 .product-card {
     border-radius: 12px;
     overflow: hidden;
@@ -887,6 +971,27 @@ p {
     transform: translateY(-5px);
 }
 
+/* Floating WhatsApp (mobile) */
+.floating-whatsapp {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #25D366;
+  color: #fff;
+  display: none; /* default hidden, shown via media query */
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  z-index: 1100;
+}
+
+.floating-whatsapp i {
+  font-size: 24px;
+}
+
 /* Responsive Styles */
 @media (max-width: 991.98px) {
     h1 {
@@ -904,6 +1009,16 @@ p {
     .gallery-item {
         height: 250px;
     }
+
+    /* Mobile hero tweaks */
+    .hero-section {
+        padding: 100px 0 50px;
+        background-size: cover; /* caso haja imagem de fundo */
+        background-position: center top;
+    }
+    
+    /* Show floating WhatsApp on mobile/tablet */
+    .floating-whatsapp { display: flex; }
 }
 
 @media (max-width: 767.98px) {
@@ -926,6 +1041,10 @@ p {
     transform: translateY(30px);
     transition: opacity 0.6s ease, transform 0.6s ease;
 }
+/* Anchor offset for fixed navbar */
+header#inicio, section[id] {
+  scroll-margin-top: 130px;
+}
 
 .fade-in.visible {
     opacity: 1;
@@ -939,26 +1058,26 @@ p {
     z-index: 2;
 }
 
-.hero-section .btn {
+  .hero-section .btn {
     position: relative;
     z-index: 2;
     text-shadow: none;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
+  }
 
-.navbar-brand {
+  .navbar-brand {
     font-weight: 700;
     font-size: 1.5rem;
     color: var(--primary-color) !important;
-}
+  }
 
-.nav-link {
+  .nav-link {
     font-weight: 500;
     padding: 0.5rem 1rem !important;
     position: relative;
-}
+  }
 
-.nav-link::after {
+  .nav-link::after {
     content: '';
     position: absolute;
     width: 0;
@@ -966,14 +1085,14 @@ p {
     bottom: 0;
     left: 50%;
     background-color: var(--primary-color);
-    transition: all 0.3s ease;
+    transition: width 0.3s ease;
     transform: translateX(-50%);
-}
+  }
 
-.nav-link:hover::after,
-.nav-link.active::after {
+  .nav-link:hover::after,
+  .nav-link.active::after {
     width: 60%;
-}
+  }
 
 /* Products Section */
 .products-section {

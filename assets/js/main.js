@@ -161,75 +161,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Add active class to current nav item for single page navigation
-    const currentPage = window.location.hash || '#';
-    
-    // Update active class based on current section in viewport
-    function updateActiveNavLink() {
-        const sections = document.querySelectorAll('section[id]');
-        let currentSection = '';
-        
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 100;
-            const sectionHeight = section.offsetHeight;
-            
-            if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-                currentSection = `#${section.id}`;
-            }
-        });
-        
-        navLinks.forEach(link => {
-            const linkHref = link.getAttribute('href');
-            if (linkHref === currentPage || 
-                (currentSection && linkHref.endsWith(currentSection))) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
-        });
-    }
-    
-    // Initial update
-    updateActiveNavLink();
-    
-    // Update on scroll with debounce
-    window.addEventListener('scroll', debounce(updateActiveNavLink, 100));
+    // Manual nav active management removed to avoid conflict with Bootstrap ScrollSpy
 
-    // Back to top button
-    const backToTopButton = document.createElement('button');
-    backToTopButton.innerHTML = '<i class="fas fa-arrow-up"></i>';
-    backToTopButton.className = 'btn btn-primary btn-floating btn-lg back-to-top';
-    backToTopButton.setAttribute('title', 'Voltar ao topo');
-    backToTopButton.setAttribute('aria-label', 'Voltar ao topo');
-    document.body.appendChild(backToTopButton);
-
-    // Show/hide back to top button
-    function toggleBackToTop() {
-        if (window.pageYOffset > 300) {
-            backToTopButton.classList.add('active');
-        } else {
-            backToTopButton.classList.remove('active');
-        }
-    }
-    
-    // Initial check
-    toggleBackToTop();
-    
-    // Check on scroll with debounce
-    let isScrollingBtn;
-    window.addEventListener('scroll', function() {
-        window.clearTimeout(isScrollingBtn);
-        isScrollingBtn = setTimeout(toggleBackToTop, 50);
-    });
-
-    // Smooth scroll to top
-    backToTopButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
+    // Back to top button removed by request – no floating arrow is injected
     
     // Preload images for better performance
     function preloadImages() {
