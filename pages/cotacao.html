@@ -148,73 +148,32 @@
     <section class="container mb-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <form id="quoteForm" class="quote-form">
+                <form id="quoteForm" class="quote-form" onsubmit="enviarCotacaoWhatsApp(event)">
                     <div class="mb-4">
-                        <h3 class="mb-4 text-center">Dados da Peça</h3>
+                        <div class="mb-4">
+                            <label for="descricao" class="form-label required-field">Descrição da peça</label>
+                            <textarea class="form-control form-textarea" id="descricao" name="descricao" rows="3" placeholder="Descreva a peça que deseja encomendar, incluindo características importantes" required></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="nome" class="form-label required-field">Nome</label>
+                            <input type="text" class="form-control" id="nome" name="nome" placeholder="Seu nome completo" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="cidade" class="form-label">Cidade</label>
+                            <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Sua cidade (opcional)">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="observacao" class="form-label">Observação</label>
+                            <textarea class="form-control form-textarea" id="observacao" name="observacao" rows="2" placeholder="Alguma informação adicional? (opcional)"></textarea>
+                        </div>
                         
                         <div class="mb-4">
-                            <label for="peça" class="form-label required-field">Peça de inspiração ou descrição</label>
-                            <textarea class="form-control form-textarea" id="peça" name="peça" rows="4" placeholder="Descreva a peça que você deseja. Pode ser um modelo específico, uma foto de inspiração ou uma ideia geral." required></textarea>
-                            <div class="form-text">Quanto mais detalhes você fornecer, mais precisa será a cotação.</div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="tamanho" class="form-label required-field">Tamanho</label>
-                                    <select class="form-select" id="tamanho" name="tamanho" required>
-                                        <option value="" selected disabled>Selecione o tamanho</option>
-                                        <option value="PP">PP</option>
-                                        <option value="P">P</option>
-                                        <option value="M">M</option>
-                                        <option value="G">G</option>
-                                        <option value="GG">GG</option>
-                                        <option value="personalizado">Outro (especificar na descrição)</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="cor" class="form-label">Cor</label>
-                                    <input type="text" class="form-control" id="cor" name="cor" placeholder="Ex: Azul marinho, rosa bebê, etc." value="A sua escolha">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <h3 class="mb-4 text-center">Seus Dados</h3>
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="nome" class="form-label required-field">Nome Completo</label>
-                                    <input type="text" class="form-control" id="nome" name="nome" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="telefone" class="form-label required-field">WhatsApp</label>
-                                    <input type="tel" class="form-control" id="telefone" name="telefone" placeholder="(00) 00000-0000" required>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="local" class="form-label required-field">Cidade/Estado</label>
-                            <input type="text" class="form-control" id="local" name="local" placeholder="Onde você está?" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="mensagem" class="form-label">Mensagem adicional (opcional)</label>
-                            <textarea class="form-control form-textarea" id="mensagem" name="mensagem" rows="3" placeholder="Alguma informação adicional que gostaria de compartilhar?"></textarea>
-                        </div>
-                    </div>
-                    
-                    <div class="d-grid
-                    <button type="submit" class="btn btn-quote">
-                        <i class="fas fa-paper-plane me-2"></i> Enviar Solicitação de Cotação
-                    </button>
+                            <button type="submit" class="btn btn-whatsapp w-100 py-3" onclick="enviarCotacaoWhatsApp(event)">
+                                💌 Enviar pelo WhatsApp
+                            </button>
                     
                     <p class="text-muted mt-3 small">
                         <i class="fas fa-lock me-2"></i> Seus dados estão seguros e serão usados apenas para entrar em contato sobre esta cotação.
@@ -261,53 +220,76 @@
         </div>
     </footer>
 
+    <!-- Modal de Confirmação -->
+    <div class="modal fade" id="confirmacaoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center p-5">
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                    </div>
+                    <h4 class="mb-3">Pedido Recebido!</h4>
+                    <p class="mb-4">Agradecemos pelo seu contato. Em breve entraremos em contato pelo WhatsApp para finalizar sua encomenda.</p>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="window.location.href='../index.html'">Voltar para a Página Inicial</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanilla-masker@1.1.1/lib/vanilla-masker.min.js"></script>
     <script>
-        // Máscara para o telefone
-        document.addEventListener('DOMContentLoaded', function() {
+        (function() {
             // Atualiza o ano no footer
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-            
-            // Máscara para o telefone
-            const phoneInput = document.getElementById('telefone');
-            if (phoneInput) {
-                VMasker(phoneInput).maskPattern('(99) 99999-9999');
-            }
-            
-            // Envio do formulário
-            const form = document.getElementById('quoteForm');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    // Coletar dados do formulário
-                    const formData = new FormData(form);
-                    const data = Object.fromEntries(formData.entries());
-                    
-                    // Criar mensagem para o WhatsApp
-                    let message = `*Nova solicitação de cotação*\n\n`;
-                    message += `*Nome:* ${data.nome}\n`;
-                    message += `*WhatsApp:* ${data.telefone}\n`;
-                    message += `*Local:* ${data.local}\n\n`;
-                    message += `*Detalhes da Peça*\n`;
-                    message += `${data.peça}\n\n`;
-                    message += `*Tamanho:* ${data.tamanho}\n`;
-                    message += `*Cor:* ${data.cor}\n\n`;
-                    
-                    if (data.mensagem) {
-                        message += `*Mensagem adicional:*\n${data.mensagem}`;
-                    }
-                    
-                    // Codificar a mensagem para URL
-                    const encodedMessage = encodeURIComponent(message);
-                    
-                    // Redirecionar para o WhatsApp
-                    window.location.href = `https://wa.me/5581992664924?text=${encodedMessage}`;
-                });
-            }
-        });
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('current-year').textContent = new Date().getFullYear();
+            });
+
+            const numero = '5581992664924'; // número da loja (DDI+DDD+número)
+            const byId = id => document.getElementById(id);
+
+            const normalizeOptional = (v) => {
+                const t = (v || '').trim();
+                return t.length ? t : ' ';
+            };
+
+            window.enviarCotacaoWhatsApp = function(event) {
+                event.preventDefault();
+
+                const descricao = byId('descricao') ? byId('descricao').value : '';
+                const nome      = byId('nome')      ? byId('nome').value      : '';
+                const cidade    = byId('cidade')    ? byId('cidade').value    : '';
+                const observ    = byId('observacao')? byId('observacao').value: '';
+
+                // valida obrigatórios
+                if (!descricao.trim() || !nome.trim()) {
+                    alert('Por favor, preencha a descrição da peça e seu nome.');
+                    return;
+                }
+
+                // Usando o formato original da mensagem, mas com os campos corretos
+                const mensagem = 
+                    `*Nova solicitação de cotação*` +
+                    `%0A%0A*Nome:* ${encodeURIComponent(nome.trim())}` +
+                    `%0A*Cidade:* ${cidade ? encodeURIComponent(cidade.trim()) : "'"}` +
+                    `%0A%0A*Detalhes da Peça*` +
+                    `%0A${encodeURIComponent(descricao.trim())}` +
+                    `%0A%0A*Observações:* ${observ ? encodeURIComponent(observ.trim()) : "'"}`;
+
+                const link = `https://wa.me/${numero}?text=${mensagem}`;
+                
+                // Abre o WhatsApp
+                window.open(link, '_blank');
+                
+                // Mostra o modal de confirmação
+                const modal = new bootstrap.Modal(document.getElementById('confirmacaoModal'));
+                modal.show();
+                
+                // Limpa o formulário
+                form.reset();
+            };
+        })();
     </script>
 </body>
 </html>
