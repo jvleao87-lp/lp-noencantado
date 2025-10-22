@@ -213,6 +213,66 @@
                         </div>
         </div>
     </section>
+    <!-- Coleção de Verão Section -->
+    <section class="summer-collection" id="colecao-verao">
+        <div class="container">
+            <div class="row g-4 align-items-start">
+                <!-- Coluna Esquerda: Vídeo -->
+                <div class="col-12 col-lg-4">
+                    <div class="ratio ratio-9x16">
+                        <video class="w-100 h-100" autoplay loop muted playsinline poster="assets/images/verao1.jpeg">
+                            <source src="assets/images/verao.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+                </div>
+                <!-- Coluna Direita: Carrossel -->
+                <div class="col-12 col-lg-8">
+                    <div class="mb-3 text-start">
+                        <h2 class="section-title m-0">Coleção de Verão</h2>
+                        <p class="lead section-intro mt-2 mb-3">Peças leves, coloridas e feitas à mão para acompanhar seus dias de sol com conforto e estilo.</p>
+                    </div>
+                    <div class="swiper summer-swiper">
+                        <div class="swiper-wrapper">
+                            <!-- Slides das imagens de verão -->
+                            <div class="swiper-slide">
+                                <div class="ratio ratio-9x16 mb-3">
+                                    <img loading="lazy" src="assets/images/verao1.jpeg" alt="Coleção Verão 1" class="w-100 h-100 object-fit-cover">
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ratio ratio-9x16 mb-3">
+                                    <img loading="lazy" src="assets/images/verao2.jpeg" alt="Coleção Verão 2" class="w-100 h-100 object-fit-cover">
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ratio ratio-9x16 mb-3">
+                                    <img loading="lazy" src="assets/images/verao3.jpeg" alt="Coleção Verão 3" class="w-100 h-100 object-fit-cover">
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ratio ratio-9x16 mb-3">
+                                    <img loading="lazy" src="assets/images/verao4.jpeg" alt="Coleção Verão 4" class="w-100 h-100 object-fit-cover">
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ratio ratio-9x16 mb-3">
+                                    <img loading="lazy" src="assets/images/verao5.jpeg" alt="Coleção Verão 5" class="w-100 h-100 object-fit-cover">
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ratio ratio-9x16 mb-3">
+                                    <img loading="lazy" src="assets/images/verao6.jpeg" alt="Coleção Verão 6" class="w-100 h-100 object-fit-cover">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Como Encomendar Section -->
     <section class="py-5" id="como-encomendar">
@@ -373,6 +433,67 @@
     <script>
         // Inicialização dos Swipers
         document.addEventListener('DOMContentLoaded', function() {
+            // Inicialização do Swiper da Coleção de Verão
+            const summerSwiper = new Swiper('.summer-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                watchSlidesProgress: true,
+                observer: true,
+                observeParents: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true
+                },
+                pagination: {
+                    el: '.summer-swiper .swiper-pagination',
+                    clickable: true,
+                    dynamicBullets: true
+                },
+                navigation: {
+                    nextEl: '.summer-swiper .swiper-button-next',
+                    prevEl: '.summer-swiper .swiper-button-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 1.5,
+                        spaceBetween: 20
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 25
+                    },
+                    992: {
+                        slidesPerView: 2.5,
+                        spaceBetween: 30
+                    },
+                    1200: {
+                        slidesPerView: 3,
+                        spaceBetween: 30
+                    }
+                },
+                on: {
+                    init: function() {
+                        this.slides.forEach(slide => {
+                            slide.style.opacity = '1';
+                        });
+                    }
+                }
+            });
+
+            // Recalcular tamanhos após o carregamento das imagens e da janela
+            const summerImages = document.querySelectorAll('.summer-swiper img');
+            summerImages.forEach(img => {
+                if (img.complete) return; // já carregada
+                img.addEventListener('load', () => {
+                    summerSwiper.update();
+                });
+            });
+            window.addEventListener('load', () => {
+                summerSwiper.update();
+            });
+
             // Inicialização do Swiper da Galeria (Mobile)
             const gallerySwiper = new Swiper('.gallery-swiper', {
                 loop: true,

@@ -131,6 +131,46 @@ document.addEventListener('DOMContentLoaded', function() {
             container: 'body'
         });
     });
+
+    // Initialize Summer Collection carousel
+    const summerSwiper = document.querySelector('.summer-swiper');
+    if (summerSwiper) {
+        new Swiper(summerSwiper, {
+            loop: true,
+            slidesPerView: 1,
+            spaceBetween: 15,
+            speed: 800,
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+                dynamicBullets: true,
+            },
+            breakpoints: {
+                // Mobile (default): 1 slide
+                0: {
+                    slidesPerView: 1,
+                    spaceBetween: 15
+                },
+                // Desktop: mostra 2 imagens por slide
+                992: {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                }
+            },
+            // Melhora a performance
+            preloadImages: false,
+            lazy: {
+                loadPrevNext: true,
+            },
+            watchSlidesProgress: true,
+            watchSlidesVisibility: true
+        });
+    }
     
     // Gallery modal functionality
     const galleryModal = document.getElementById('galleryModal');

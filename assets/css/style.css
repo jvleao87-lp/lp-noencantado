@@ -17,7 +17,6 @@ body {
     line-height: 1.7;
     background-color: rgba(255, 255, 255, 0.95);
     background-image: url('../images/knit-pattern.png');
-    background-attachment: fixed;
     background-size: 300px;
     background-blend-mode: overlay;
     margin-bottom: 1.5rem;
@@ -506,6 +505,18 @@ a:hover {
     color: var(--dark-color);
     text-align: center;
     padding: 120px 0 80px;
+}
+
+/* Prefer dynamic viewport units when available */
+@supports (min-height: 100dvh) {
+  .hero-section { min-height: 100dvh; }
+}
+
+/* iOS Safari fallback */
+html, body { height: auto; }
+@supports (-webkit-touch-callout: none) {
+  html, body { height: -webkit-fill-available; }
+  .hero-section { min-height: -webkit-fill-available; }
 }
 
 @keyframes gradientBG {
@@ -1003,7 +1014,7 @@ p {
     }
     
     .hero-section {
-        padding: 100px 0 60px;
+        padding: 96px 0 48px;
     }
     
     .gallery-item {
@@ -1012,15 +1023,15 @@ p {
 
     /* Mobile hero tweaks */
     .hero-section {
-        padding: 100px 0 50px;
         background-size: cover; /* caso haja imagem de fundo */
         background-position: center top;
+        min-height: 100svh; /* Safari address bar friendly */
+        background-repeat: no-repeat;
     }
-    
+    .hero-overlay { opacity: 0.06; } /* reduz textura no mobile */
     /* Show floating WhatsApp on mobile/tablet */
     .floating-whatsapp { display: flex; }
 }
-
 @media (max-width: 767.98px) {
   h1 { font-size: 2rem; }
   h2 { font-size: 1.8rem; }
@@ -1483,6 +1494,11 @@ footer a:hover {
     height: 100%;
 }
 
+/* 9:16 portrait helper */
+.ratio-9x16::before {
+    padding-top: 177.78%;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 10px;
@@ -1849,7 +1865,6 @@ footer a:hover {
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
 }
 
 /* Imagem para desktop (acima de 768px) */
@@ -1913,4 +1928,253 @@ footer a:hover {
 .hero-section .btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Summer Collection Section */
+.summer-collection {
+  padding: 5rem 0;
+  background: #fff;
+}
+
+.summer-collection .section-title {
+  margin-bottom: 1rem;
+}
+
+.summer-collection .section-intro {
+  max-width: 780px;
+  margin: 0 auto 2rem;
+  color: #666;
+}
+
+/* Revertido: removidos estilos específicos da seção summer-collection para voltar ao layout anterior */
+/* Mantemos apenas regras globais existentes no tema */
+
+.summer-collection .swiper-button-next,
+.summer-collection .swiper-button-prev {
+    color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.8);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.summer-collection .swiper-button-next:hover,
+.summer-collection .swiper-button-prev:hover {
+    background: var(--white);
+    transform: scale(1.1);
+}
+
+.summer-collection .swiper-button-next:after,
+.summer-collection .swiper-button-prev:after {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 767.98px) {
+    .summer-collection .swiper {
+        padding: 1rem 0.5rem;
+        margin: 0 -0.5rem;
+    }
+    
+    .summer-collection .swiper-slide {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.summer-collection .media-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.summer-collection .video-wrap {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  background: #000;
+}
+
+.summer-collection .thumbs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.summer-collection .thumbs-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* Products Swiper */
+.products-swiper {
+  width: 100%;
+  padding: 20px 0 40px;
+}
+
+.products-swiper .swiper-slide {
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.products-swiper .swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.products-swiper .swiper-slide:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.products-swiper .swiper-slide:hover img {
+  transform: scale(1.05);
+}
+
+/* Navigation buttons */
+.products-swiper .swiper-button-prev,
+.products-swiper .swiper-button-next {
+  color: var(--primary-color);
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.products-swiper .swiper-button-prev:after,
+.products-swiper .swiper-button-next:after {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.products-swiper .swiper-button-prev:hover,
+.products-swiper .swiper-button-next:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Pagination */
+.products-swiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #ccc;
+  opacity: 1;
+  margin: 0 5px !important;
+  transition: all 0.3s ease;
+}
+
+.products-swiper .swiper-pagination-bullet-active {
+  background: var(--primary-color);
+  width: 30px;
+  border-radius: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+  .products-swiper .swiper-slide img {
+    height: 250px;
+  }
+  
+  .products-swiper .swiper-button-prev,
+  .products-swiper .swiper-button-next {
+    display: none;
+  }
+}
+
+/* Summer collection layout */
+.summer-collection .summer-swiper {
+  width: 100%;
+  height: 100%;
+  padding: 0 0.5rem;
+}
+
+.summer-collection .summer-swiper .swiper-slide {
+  height: auto;
+  padding: 0.25rem;
+}
+
+/* Garante que as imagens tenham a mesma proporção do vídeo */
+.summer-collection .ratio-9x16 {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 0.75rem;
+}
+
+.summer-collection .ratio-9x16 img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.summer-collection video { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  display: block; 
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Ajustes de responsividade */
+@media (min-width: 768px) {
+  .summer-collection .summer-swiper {
+    padding: 0 1rem;
+  }
+  
+  .summer-collection .swiper-slide > .ratio-9x16:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Pagination styling */
+.summer-collection .swiper-pagination {
+  position: relative;
+  margin-top: 1rem;
+}
+
+.summer-collection .swiper-pagination-bullet {
+  background: var(--primary-color);
+  opacity: 0.5;
+  width: 10px;
+  height: 10px;
+  margin: 0 4px;
+  transition: all 0.3s ease;
+}
+
+.summer-collection .swiper-pagination-bullet-active {
+  opacity: 1;
+  width: 24px;
+  border-radius: 4px;
+}
+
+@media (max-width: 991.98px) {
+  .summer-collection { padding: 4rem 0; }
+  .summer-collection .media-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 575.98px) {
+  .summer-collection .thumbs-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 }
