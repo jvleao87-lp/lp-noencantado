@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Solicite uma cotação personalizada para sua peça de crochê artesanal do Nó Encantado. Peça sob medida em Pernambuco.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://noencantado.shop/cotacao">
+    <meta property="og:title" content="Solicite sua Cotação | Nó Encantado">
+    <meta property="og:description" content="Peça sua peça de crochê personalizada. Faça seu orçamento sem compromisso!">
+    <meta property="og:image" content="https://noencantado.shop/img/preview-cotacao.jpg">
+    
+    <title>Solicitar Cotação | Nó Encantado</title>
+    <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+    <link rel="canonical" href="https://noencantado.shop/cotacao">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@300;400;600&family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <style>
+        .quote-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/images/quote-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+        }
+        
+        .quote-form {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            margin-top: -80px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .form-control, .form-select, .form-textarea {
+            border: 2px solid #f0f0f0;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(230, 184, 162, 0.25);
+        }
+        
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .btn-quote {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-quote:hover {
+            background-color: var(--dark-color);
+            transform: translateY(-2px);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: #dc3545;
+        }
+        
+        @media (max-width: 768px) {
+            .quote-hero {
+                padding: 4rem 0;
+            }
+            
+            .quote-form {
+                padding: 1.5rem;
+                margin-top: -40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../assets/images/logo-no-encantado.png" alt="Nó Encantado" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html#galeria">Nossas Peças</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html#como-encomendar">Como Encomendar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html#sobre">Sobre</a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <a href="http://wa.me/5581992664924" class="btn btn-primary ms-lg-3" target="_blank">
+                            Fazer minha encomenda ✨
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="quote-hero">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold mb-3">Solicite sua Cotação</h1>
+                    <p class="lead">Preencha o formulário abaixo para receber um orçamento personalizado da sua peça de crochê dos sonhos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Form -->
+    <section class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form id="quoteForm" class="quote-form">
+                    <div class="mb-4">
+                        <h3 class="mb-4 text-center">Dados da Peça</h3>
+                        
+                        <div class="mb-4">
+                            <label for="peça" class="form-label required-field">Peça de inspiração ou descrição</label>
+                            <textarea class="form-control form-textarea" id="peça" name="peça" rows="4" placeholder="Descreva a peça que você deseja. Pode ser um modelo específico, uma foto de inspiração ou uma ideia geral." required></textarea>
+                            <div class="form-text">Quanto mais detalhes você fornecer, mais precisa será a cotação.</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="tamanho" class="form-label required-field">Tamanho</label>
+                                    <select class="form-select" id="tamanho" name="tamanho" required>
+                                        <option value="" selected disabled>Selecione o tamanho</option>
+                                        <option value="PP">PP</option>
+                                        <option value="P">P</option>
+                                        <option value="M">M</option>
+                                        <option value="G">G</option>
+                                        <option value="GG">GG</option>
+                                        <option value="personalizado">Outro (especificar na descrição)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="cor" class="form-label">Cor</label>
+                                    <input type="text" class="form-control" id="cor" name="cor" placeholder="Ex: Azul marinho, rosa bebê, etc." value="A sua escolha">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="mb-4 text-center">Seus Dados</h3>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nome" class="form-label required-field">Nome Completo</label>
+                                    <input type="text" class="form-control" id="nome" name="nome" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="telefone" class="form-label required-field">WhatsApp</label>
+                                    <input type="tel" class="form-control" id="telefone" name="telefone" placeholder="(00) 00000-0000" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="local" class="form-label required-field">Cidade/Estado</label>
+                            <input type="text" class="form-control" id="local" name="local" placeholder="Onde você está?" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="mensagem" class="form-label">Mensagem adicional (opcional)</label>
+                            <textarea class="form-control form-textarea" id="mensagem" name="mensagem" rows="3" placeholder="Alguma informação adicional que gostaria de compartilhar?"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid
+                    <button type="submit" class="btn btn-quote">
+                        <i class="fas fa-paper-plane me-2"></i> Enviar Solicitação de Cotação
+                    </button>
+                    
+                    <p class="text-muted mt-3 small">
+                        <i class="fas fa-lock me-2"></i> Seus dados estão seguros e serão usados apenas para entrar em contato sobre esta cotação.
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer" id="footer">
+        <div class="container py-2">
+            <div class="footer-row">
+                <div class="footer-left">
+                    <a href="../index.html" class="footer-logo">
+                        <img src="../assets/images/logo-no-encantado.png" alt="Nó Encantado" class="logo">
+                    </a>
+                    <p class="footer-about">Peças de crochê feitas à mão com amor em Pernambuco.</p>
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/_noencantado/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="http://wa.me/5581992664924" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="../index.html#inicio">Início</a></li>
+                        <li><a href="../index.html#galeria">Nossas Peças</a></li>
+                        <li><a href="../index.html#como-encomendar">Como Encomendar</a></li>
+                        <li><a href="../index.html#sobre">Sobre Nós</a></li>
+                        <li><a href="cotacao.html">Solicitar Cotação</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Entre em Contato</h4>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> Pernambuco, Brasil</p>
+                    <p><i class="fas fa-phone-alt me-2"></i> <a href="tel:+5581992664924">(81) 99266-4924</a></p>
+                    <p><i class="fas fa-envelope me-2"></i> <a href="mailto:contato@noencantado.shop">contato@noencantado.shop</a></p>
+                </div>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; <span id="current-year">2024</span> Nó Encantado. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-masker@1.1.1/lib/vanilla-masker.min.js"></script>
+    <script>
+        // Máscara para o telefone
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atualiza o ano no footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            
+            // Máscara para o telefone
+            const phoneInput = document.getElementById('telefone');
+            if (phoneInput) {
+                VMasker(phoneInput).maskPattern('(99) 99999-9999');
+            }
+            
+            // Envio do formulário
+            const form = document.getElementById('quoteForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Coletar dados do formulário
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData.entries());
+                    
+                    // Criar mensagem para o WhatsApp
+                    let message = `*Nova solicitação de cotação*\n\n`;
+                    message += `*Nome:* ${data.nome}\n`;
+                    message += `*WhatsApp:* ${data.telefone}\n`;
+                    message += `*Local:* ${data.local}\n\n`;
+                    message += `*Detalhes da Peça*\n`;
+                    message += `${data.peça}\n\n`;
+                    message += `*Tamanho:* ${data.tamanho}\n`;
+                    message += `*Cor:* ${data.cor}\n\n`;
+                    
+                    if (data.mensagem) {
+                        message += `*Mensagem adicional:*\n${data.mensagem}`;
+                    }
+                    
+                    // Codificar a mensagem para URL
+                    const encodedMessage = encodeURIComponent(message);
+                    
+                    // Redirecionar para o WhatsApp
+                    window.location.href = `https://wa.me/5581992664924?text=${encodedMessage}`;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
