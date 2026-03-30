@@ -11,40 +11,118 @@ const supabaseClient = createClient(
 );
 
 /**
- * Busca uma peça específica por ID ou slug
+ * Busca uma peça específica por ID ou slug - VERSÃO ROBUSTA
  * @param {string} identifier - ID ou slug da peça
- * @returns {Promise<Object>} Dados da peça
+ * @returns {Promise<Object>} Dados da peça completos
  */
 async function fetchPecaByIdentifier(identifier) {
+    console.log('🔍 DEBUG: Iniciando busca da peça com identifier:', identifier);
+    
     try {
-        // Verificar se identifier é UUID ou slug
-        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(identifier);
-        
-        let query = supabaseClient
-            .from('pecas')
-            .select(`
-                *,
-                colecoes (nome, emoji, ativa),
-                pecas_imagens (url, categoria, ordem)
-            `)
-            .eq('ativa', true);
-
-        if (isUuid) {
-            query = query.eq('id', identifier);
-        } else {
-            query = query.eq('slug', identifier);
-        }
-
-        const { data, error } = await query.single();
-
-        if (error) {
-            console.error('Erro ao buscar peça:', error);
+        // Validação inicial
+        if (!identifier) {
+            console.error('❌ DEBUG: Identifier está vazio ou nulo');
             return null;
         }
 
-        return data;
+        // Verificar se identifier é UUID ou slug
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(identifier);
+        console.log('🔍 DEBUG: Identifier é UUID?', isUuid);
+        
+        // ETAPA 1: Buscar dados básicos da peça (sem joins)
+        console.log('🔍 DEBUG: Buscando dados básicos da peça...');
+        let pecaQuery = supabaseClient
+            .from('pecas')
+            .select('*')
+            .eq('ativa', true);
+
+        if (isUuid) {
+            console.log('🔍 DEBUG: Filtrando por ID:', identifier);
+            pecaQuery = pecaQuery.eq('id', identifier);
+        } else {
+            console.log('🔍 DEBUG: Filtrando por slug:', identifier);
+            pecaQuery = pecaQuery.eq('slug', identifier);
+        }
+
+        const { data: pecaData, error: pecaError } = await pecaQuery.maybeSingle();
+        
+        console.log('🔍 DEBUG: Resultado da busca da peça:');
+        console.log('  - Data:', pecaData);
+        console.log('  - Error:', pecaError);
+
+        if (pecaError) {
+            console.error('❌ DEBUG: Erro ao buscar peça:', pecaError);
+            console.error('❌ DEBUG: Detalhes do erro:', {
+                message: pecaError.message,
+                details: pecaError.details,
+                hint: pecaError.hint,
+                code: pecaError.code
+            });
+            return null;
+        }
+
+        if (!pecaData) {
+            console.log('❌ DEBUG: Peça não encontrada ou não está ativa');
+            return null;
+        }
+
+        console.log('✅ DEBUG: Peça encontrada:', pecaData.titulo);
+
+        // ETAPA 2: Buscar coleção (se existir colecao_id)
+        let colecaoData = null;
+        if (pecaData.colecao_id) {
+            console.log('🔍 DEBUG: Buscando coleção ID:', pecaData.colecao_id);
+            
+            const { data: colecaoResult, error: colecaoError } = await supabaseClient
+                .from('colecoes')
+                .select('nome, emoji, ativa')
+                .eq('id', pecaData.colecao_id)
+                .eq('ativa', true)
+                .maybeSingle();
+
+            console.log('🔍 DEBUG: Resultado da busca da coleção:');
+            console.log('  - Data:', colecaoResult);
+            console.log('  - Error:', colecaoError);
+
+            if (colecaoError) {
+                console.warn('⚠️ DEBUG: Erro ao buscar coleção (continuando sem coleção):', colecaoError);
+            } else {
+                colecaoData = colecaoResult;
+            }
+        }
+
+        // ETAPA 3: Buscar imagens da peça
+        console.log('🔍 DEBUG: Buscando imagens da peça ID:', pecaData.id);
+        
+        const { data: imagensData, error: imagensError } = await supabaseClient
+            .from('pecas_imagens')
+            .select('url, categoria, ordem')
+            .eq('peca_id', pecaData.id)
+            .order('ordem', { ascending: true });
+
+        console.log('🔍 DEBUG: Resultado da busca de imagens:');
+        console.log('  - Data:', imagensData);
+        console.log('  - Error:', imagensError);
+
+        if (imagensError) {
+            console.warn('⚠️ DEBUG: Erro ao buscar imagens (continuando sem imagens):', imagensError);
+        }
+
+        // ETAPA 4: Montar objeto completo
+        const pecaCompleta = {
+            ...pecaData,
+            colecoes: colecaoData,
+            pecas_imagens: imagensData || []
+        };
+
+        console.log('✅ DEBUG: Peça completa montada:', pecaCompleta.titulo);
+        console.log('🔍 DEBUG: Total de imagens:', pecaCompleta.pecas_imagens.length);
+        
+        return pecaCompleta;
+
     } catch (err) {
-        console.error('Erro inesperado ao buscar peça:', err);
+        console.error('❌ DEBUG: Erro inesperado ao buscar peça:', err);
+        console.error('❌ DEBUG: Stack trace:', err.stack);
         return null;
     }
 }

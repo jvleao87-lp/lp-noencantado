@@ -48,39 +48,100 @@ class PecaPage {
             
         } catch (error) {
             console.error('Erro ao inicializar página da peça:', error);
-            this.mostrarErro();
+            this.mostrarErro(error);
         }
     }
 
     /**
-     * Obtém o ID da peça da URL
+     * Obtém o ID da peça da URL - VERSÃO ROBUSTA
      */
     getPecaIdFromUrl() {
+        console.log('🔍 DEBUG: Extraindo ID da URL...');
+        console.log('🔍 DEBUG: URL completa:', window.location.href);
+        
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
         const slug = urlParams.get('slug');
         
-        // Prioriza slug, senão usa ID
-        return slug || id;
+        console.log('🔍 DEBUG: Parâmetros extraídos:');
+        console.log('  - id:', id);
+        console.log('  - slug:', slug);
+        
+        // Para URL atual, priorizar ID (conforme contexto do usuário)
+        const identifier = id || slug;
+        
+        console.log('🔍 DEBUG: Identifier escolhido:', identifier);
+        
+        if (!identifier) {
+            console.error('❌ DEBUG: Nenhum ID ou slug encontrado na URL');
+        }
+        
+        return identifier;
     }
 
     /**
-     * Carrega os dados da peça do Supabase
+     * Carrega os dados da peça do Supabase - VERSÃO ROBUSTA
      */
     async carregarPeca(pecaId) {
+        console.log('🔍 DEBUG: Iniciando carregamento da peça...');
+        console.log('🔍 DEBUG: ID recebido:', pecaId);
+        
         try {
-            // Usar função auxiliar do supabase-data.js
-            this.peca = await window.fetchPecaByIdentifier(pecaId);
-            
-            if (!this.peca) {
-                throw new Error('Peça não encontrada');
+            // Validação do ID
+            if (!pecaId) {
+                throw new Error('ID da peça não fornecido');
             }
 
+            if (typeof pecaId !== 'string') {
+                throw new Error('ID da peça deve ser uma string');
+            }
+
+            // Usar função auxiliar do supabase-data.js com logs detalhados
+            console.log('🔍 DEBUG: Chamando fetchPecaByIdentifier...');
+            this.peca = await window.fetchPecaByIdentifier(pecaId);
+            
+            console.log('🔍 DEBUG: Resultado de fetchPecaByIdentifier:', this.peca);
+            
+            if (!this.peca) {
+                console.error('❌ DEBUG: fetchPecaByIdentifier retornou null');
+                throw new Error('Peça não encontrada ou não está ativa');
+            }
+
+            // Validar estrutura da peça
+            if (!this.peca.id) {
+                console.error('❌ DEBUG: Peça não tem ID');
+                throw new Error('Dados da peça inválidos: sem ID');
+            }
+
+            if (!this.peca.titulo) {
+                console.error('❌ DEBUG: Peça não tem título');
+                throw new Error('Dados da peça inválidos: sem título');
+            }
+
+            console.log('✅ DEBUG: Peça básica validada:', this.peca.titulo);
+            console.log('🔍 DEBUG: Dados completos da peça:', this.peca);
+
+            // Processar imagens
+            console.log('🔍 DEBUG: Processando imagens...');
             this.imagens = this.processarImagens(this.peca.pecas_imagens);
+            console.log('✅ DEBUG: Imagens processadas:', this.imagens.length, 'imagens');
             
         } catch (error) {
-            console.error('Erro ao carregar peça:', error);
-            throw error;
+            console.error('❌ DEBUG: Erro ao carregar peça:', error);
+            console.error('❌ DEBUG: Tipo do erro:', error.constructor.name);
+            console.error('❌ DEBUG: Mensagem:', error.message);
+            console.error('❌ DEBUG: Stack:', error.stack);
+            
+            // Diferenciar tipos de erro
+            if (error.message.includes('Peça não encontrada')) {
+                throw new Error('Peça não encontrada');
+            } else if (error.message.includes('ID da peça')) {
+                throw new Error('ID inválido na URL');
+            } else if (error.message.includes('Dados da peça inválidos')) {
+                throw new Error('Dados da peça corrompidos');
+            } else {
+                throw new Error('Erro ao carregar dados da peça');
+            }
         }
     }
 
@@ -344,11 +405,54 @@ class PecaPage {
     }
 
     /**
-     * Mostra mensagem de erro
+     * Mostra mensagem de erro específica - VERSÃO ROBUSTA
      */
-    mostrarErro() {
-        document.getElementById('loading-state').style.display = 'none';
-        document.getElementById('error-state').style.display = 'flex';
+    mostrarErro(error = null) {
+        console.log('🔍 DEBUG: Mostrando tela de erro...');
+        console.log('🔍 DEBUG: Erro recebido:', error);
+        
+        const loadingState = document.getElementById('loading-state');
+        const errorState = document.getElementById('error-state');
+        const errorContent = errorState.querySelector('.error-content');
+        
+        // Esconder loading
+        if (loadingState) {
+            loadingState.style.display = 'none';
+        }
+        
+        // Personalizar mensagem de erro
+        let titulo = 'Peça não encontrada';
+        let mensagem = 'Desculpe, não conseguimos encontrar a peça que você está procurando.';
+        
+        if (error) {
+            console.log('🔍 DEBUG: Personalizando mensagem para:', error.message);
+            
+            if (error.message.includes('ID inválido na URL')) {
+                titulo = 'URL inválida';
+                mensagem = 'O ID da peça na URL está incorreto. Verifique o link e tente novamente.';
+            } else if (error.message.includes('Dados da peça corrompidos')) {
+                titulo = 'Dados corrompidos';
+                mensagem = 'Os dados desta peça estão corrompidos. Entre em contato conosco para ajuda.';
+            } else if (error.message.includes('Erro ao carregar dados')) {
+                titulo = 'Erro de conexão';
+                mensagem = 'Não foi possível carregar os dados da peça. Tente recarregar a página.';
+            } else if (error.message.includes('ID da peça não encontrado na URL')) {
+                titulo = 'URL incompleta';
+                mensagem = 'A URL está incompleta. É necessário especificar o ID da peça.';
+            }
+        }
+        
+        // Atualizar conteúdo do erro
+        const tituloEl = errorContent.querySelector('h2');
+        const mensagemEl = errorContent.querySelector('p.text-muted');
+        
+        if (tituloEl) tituloEl.textContent = titulo;
+        if (mensagemEl) mensagemEl.textContent = mensagem;
+        
+        // Mostrar tela de erro
+        errorState.style.display = 'flex';
+        
+        console.log('✅ DEBUG: Tela de erro exibida com mensagem:', titulo);
     }
 
     /**
