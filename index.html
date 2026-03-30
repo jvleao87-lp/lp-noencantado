@@ -134,13 +134,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#inicio">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#galeria">Nossas Peças</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="#como-encomendar">Como Encomendar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#galeria">Peças em Destaque</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#nossas-pecas">Nossas Peças</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#sobre">Sobre</a>
@@ -189,147 +189,53 @@ Cada criação é única, feita sob medida para quem acredita no poder do encant
     </header>
 
     <!-- Galeria Section -->
-    <section class="py-5 bg-light" id="galeria">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="section-title">Nossas Peças</h2>
-                <p class="lead">Peças que carregam histórias, texturas e sentimentos. Do fio ao último ponto, cada detalhe é pensado para valorizar sua beleza e seu estilo único.</p>
-            </div>
-            
-
-            
-            <!-- Desktop Grid -->
-            <div class="d-none d-lg-block">
-                <div class="row g-4">
-                    <!-- Bolsas -->
-                    <div class="col-md-6 col-lg-3">
-                        <div class="gallery-item">
-                            <div class="gallery-img" style="background-image: url('assets/images/bolsas.jpg');">
-                                <div class="gallery-overlay">
-                                    <h3>👜 Bolsa Encantada</h3>
-                                    <p class="gallery-variations">🧶 Disponível nas versões: tradicional, eco bag e mini eco bag rosa.</p>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Chapéus -->
-                    <div class="col-md-6 col-lg-3">
-                        <div class="gallery-item">
-                            <div class="gallery-img" style="background-image: url('assets/images/chapeus.jpg');">
-                                <div class="gallery-overlay">
-                                    <h3>👒 Chapéu de fio mágico</h3>
-                                    <p class="gallery-variations">🌿 Escolha sua cor favorita e leve um toque encantado ao seu visual.</p>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Croppeds -->
-                    <div class="col-md-6 col-lg-3">
-                        <div class="gallery-item">
-                            <div class="gallery-img" style="background-image: url('assets/images/croppeds.jpg');">
-                                <div class="gallery-overlay">
-                                    <h3>🧵 Cropped Laço de Fada</h3>
-                                    <p class="gallery-variations">✨ Disponível nas versões tradicional e de amarração.</p>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bags -->
-                    <div class="col-md-6 col-lg-3">
-                        <div class="gallery-item">
-                            <div class="gallery-img" style="background-image: url('assets/images/bags.jpg');">
-                                <div class="gallery-overlay">
-                                    <h3>📱 Porta Celular de Bruxo</h3>
-                                    <p class="gallery-variations">💗 Personalizável em cores e tamanho.</p>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center mt-5">
-                <a href="#" data-whatsapp-link class="btn btn-primary btn-lg" target="_blank">
-                    <i class="fab fa-whatsapp me-2"></i>Encomendar Agora
-                </a>
-            </div>
-
-                        <!-- Mobile Carousel -->
-                        <div class="d-block d-lg-none mb-4">
-                            <div class="swiper gallery-swiper">
-                                <div class="swiper-wrapper">
-                                    <!-- Bolsas -->
-                                    <div class="swiper-slide">
-                                        <div class="gallery-item h-100">
-                                            <div class="gallery-img" style="background-image: url('assets/images/bolsas.jpg');">
-                                                <div class="gallery-overlay"></div>
-                                            </div>
-                                            <div class="gallery-caption">
-                                                <h3 class="mb-1">👜 Bolsa Encantada</h3>
-                                                <p class="mb-0">Tradicional, eco bag e mini eco bag rosa</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Chapéus -->
-                                    <div class="swiper-slide">
-                                        <div class="gallery-item h-100">
-                                            <div class="gallery-img" style="background-image: url('assets/images/chapeus.jpg');">
-                                                <div class="gallery-overlay"></div>
-                                            </div>
-                                            <div class="gallery-caption">
-                                                <h3 class="mb-1">👒 Chapéu de fio mágico</h3>
-                                                <p class="mb-0">Cores variadas com toque encantado</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Croppeds -->
-                                    <div class="swiper-slide">
-                                        <div class="gallery-item h-100">
-                                            <div class="gallery-img" style="background-image: url('assets/images/croppeds.jpg');">
-                                                <div class="gallery-overlay"></div>
-                                            </div>
-                                            <div class="gallery-caption">
-                                                <h3 class="mb-1">🧵 Cropped Laço de Fada</h3>
-                                                <p class="mb-0">Tradicional e versão de amarração</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Bags -->
-                                    <div class="swiper-slide">
-                                        <div class="gallery-item h-100">
-                                            <div class="gallery-img" style="background-image: url('assets/images/bags.jpg');">
-                                                <div class="gallery-overlay"></div>
-                                            </div>
-                                            <div class="gallery-caption">
-                                                <h3 class="mb-1">📱 Porta Celular de Bruxo</h3>
-                                                <p class="mb-0">Personalizáveis em cores e tamanho</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-pagination"></div>
-                                <button class="carousel-prev" aria-label="Anterior">
-                                    <i class="fas fa-chevron-left"></i>
-                                </button>
-                                <button class="carousel-next" aria-label="Próximo">
-                                    <i class="fas fa-chevron-right"></i>
-                                </button>
-                            </div>
-                        </div>
+<!-- Galeria Section -->
+<section class="py-5 bg-light" id="galeria">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Peças em Destaque</h2>
+            <p class="lead">
+                Peças que carregam histórias, texturas e sentimentos. Do fio ao último ponto,
+                cada detalhe é pensado para valorizar sua beleza e seu estilo único.
+            </p>
         </div>
-    </section>
+
+        <!-- Desktop Grid -->
+        <div class="d-none d-lg-block">
+            <div class="row g-4" id="featured-pieces-desktop">
+                <!-- Conteúdo dinâmico do Supabase -->
+            </div>
+        </div>
+
+        <!-- Mobile Carousel -->
+        <div class="d-block d-lg-none">
+            <div class="swiper gallery-swiper">
+                <div class="swiper-wrapper" id="featured-pieces-mobile">
+                    <!-- Conteúdo dinâmico do Supabase -->
+                </div>
+
+                <div class="swiper-pagination"></div>
+
+                <button type="button" class="carousel-prev" aria-label="Peça anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <button type="button" class="carousel-next" aria-label="Próxima peça">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="#" data-whatsapp-link class="btn btn-primary btn-lg" target="_blank">
+                <i class="fab fa-whatsapp me-2"></i>Encomendar Agora
+            </a>
+        </div>
+    </div>
+</section>
+
     <!-- Coleção de Verão Section -->
-<section class="summer-collection" id="colecao-verao">
+    <section class="py-5 bg-light" id="colecao-verao">
         <div class="container">
             <div class="row g-4 align-items-start">
                 <!-- Coluna Esquerda: Vídeo -->
@@ -437,6 +343,30 @@ Cada criação é única, feita sob medida para quem acredita no poder do encant
                     <i class="fab fa-whatsapp me-2"></i>Fazer Pedido pelo WhatsApp
                 </a>
             </div>
+        </div>
+    </section>
+    <!-- Nossas Peças (Grid) -->
+    <section class="py-5 bg-light" id="nossas-pecas">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Nossas Peças</h2>
+                <p class="lead text-muted">Explore nosso catálogo completo de criações artesanais</p>
+            </div>
+            <div id="all-pieces-container">
+                <!-- Todas as peças serão carregadas dinamicamente do Supabase -->
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button id="load-more-pieces" class="btn btn-primary" onclick="loadMorePieces()" style="display: none;">
+                    Mostrar mais
+                </button>
+            </div>
+        </div>
+    </section>
 
     <!-- Sobre a Criadora -->
     <section class="py-5 bg-light" id="sobre">
@@ -600,7 +530,9 @@ Cada criação é única, feita sob medida para quem acredita no poder do encant
     </a>
 
     <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/site-config.js"></script>
+    <script src="assets/js/supabase-data.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -674,8 +606,9 @@ Cada criação é única, feita sob medida para quem acredita no poder do encant
             const gallerySwiper = new Swiper('.gallery-swiper', {
                 loop: true,
                 spaceBetween: 20,
-                slidesPerView: 1.2,
+                slidesPerView: 1,
                 centeredSlides: true,
+                initialSlide: 0,
                 pagination: {
                     el: '.gallery-swiper .swiper-pagination',
                     clickable: true,
@@ -686,12 +619,25 @@ Cada criação é única, feita sob medida para quem acredita no poder do encant
                 },
                 breakpoints: {
                     576: {
-                        slidesPerView: 1.5,
-                        spaceBetween: 20
+                        slidesPerView: 1.2,
+                        spaceBetween: 25,
+                        centeredSlides: true
                     },
                     768: {
-                        slidesPerView: 2.2,
-                        spaceBetween: 30
+                        slidesPerView: 1.5,
+                        spaceBetween: 30,
+                        centeredSlides: true
+                    },
+                    992: {
+                        slidesPerView: 2,
+                        spaceBetween: 30,
+                        centeredSlides: false
+                    }
+                },
+                on: {
+                    init: function () {
+                        // Garantir altura correta após inicialização
+                        this.update();
                     }
                 }
             });

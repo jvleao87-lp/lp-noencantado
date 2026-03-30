@@ -1,6 +1,6 @@
 /**
  * Integração com Supabase para buscar peças de crochê
- * Somente usando a chave pública anon para segurança
+ * Usa a estrutura HTML existente do site
  */
 
 // Inicialização do cliente Supabase com chave pública anon
@@ -9,6 +9,68 @@ const supabaseClient = createClient(
     'https://cdofbumzwaclviriaxhc.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkb2ZidW16d2FjbHZpcmlheGhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0ODE5MzQsImV4cCI6MjA4OTA1NzkzNH0.wGo1Q1ZzkkXWAmDIpIArdAUPIyakoHVPr-ufPVry1lM'
 );
+
+/**
+ * Busca peças em destaque com imagens e coleções
+ * @returns {Promise<Array>} Lista de peças em destaque
+ */
+async function fetchFeaturedPieces() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('pecas')
+            .select(`
+                *,
+                colecoes (nome, emoji, ativa),
+                pecas_imagens (url, categoria)
+            `)
+            .eq('ativa', true)
+            .eq('destaque', true)
+            .eq('colecoes.ativa', true)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Erro ao buscar peças em destaque:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error('Erro inesperado ao buscar peças em destaque:', err);
+        return [];
+    }
+}
+
+/**
+ * Busca todas as peças ativas com paginação
+ * @param {number} offset - Offset para paginação
+ * @param {number} limit - Limite de itens por página
+ * @returns {Promise<Array>} Lista de peças ativas
+ */
+async function fetchAllPiecesPaginated(offset = 0, limit = 6) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('pecas')
+            .select(`
+                *,
+                colecoes (nome, emoji, ativa),
+                pecas_imagens (url, categoria)
+            `)
+            .eq('ativa', true)
+            .eq('colecoes.ativa', true)
+            .order('created_at', { ascending: false })
+            .range(offset, offset + limit - 1);
+
+        if (error) {
+            console.error('Erro ao buscar peças paginadas:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error('Erro inesperado ao buscar peças paginadas:', err);
+        return [];
+    }
+}
 
 /**
  * Busca todas as peças ativas com imagens e coleções
@@ -70,34 +132,23 @@ async function fetchSummerPieces() {
 }
 
 /**
- * Renderiza uma peça no container especificado
+ * Renderiza uma peça em destaque no estilo mobile-first
  * @param {Object} piece - Dados da peça
  * @param {HTMLElement} container - Container onde renderizar
  */
-function renderPiece(piece, container) {
+function renderFeaturedPiece(piece, container) {
     const firstImage = piece.pecas_imagens && piece.pecas_imagens.length > 0 
         ? piece.pecas_imagens[0].url 
-        : null;
+        : 'assets/images/bags.jpg';
 
     const pieceHTML = `
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 ${piece.destaque ? 'border-warning' : ''}">
-                ${firstImage ? `
-                    <img src="${firstImage}" class="card-img-top" alt="${piece.titulo}" 
-                         style="height: 200px; object-fit: cover;">
-                ` : ''}
-                <div class="card-body d-flex flex-column">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h5 class="card-title">${piece.titulo}</h5>
-                        ${piece.destaque ? '<span class="badge bg-warning text-dark">⭐ Destaque</span>' : ''}
+        <div class="col-6 col-lg-3 mb-4">
+            <div class="gallery-item">
+                <div class="gallery-img" style="background-image: url('${firstImage}');">
+                    <div class="gallery-overlay">
+                        <h3 class="h6">${piece.colecoes?.emoji || '⭐'} ${piece.titulo}</h3>
+                        <p class="gallery-variations small">${piece.descricao || 'Peça especial'}</p>
                     </div>
-                    <p class="card-text flex-grow-1">${piece.descricao || ''}</p>
-                    <div class="text-muted small mb-3">
-                        <span>${piece.colecoes?.emoji || ''}</span> ${piece.colecoes?.nome || 'Sem coleção'}
-                    </div>
-                    <a href="#" data-whatsapp-link class="btn btn-primary btn-sm mt-auto">
-                        <i class="fab fa-whatsapp me-2"></i>Encomendar
-                    </a>
                 </div>
             </div>
         </div>
@@ -107,109 +158,463 @@ function renderPiece(piece, container) {
 }
 
 /**
- * Renderiza mensagem de estado vazio
- * @param {HTMLElement} container - Container onde renderizar
- * @param {string} message - Mensagem a exibir
+ * Renderiza uma peça no carousel mobile da galeria
+ * @param {Object} piece - Dados da peça
+ * @param {HTMLElement} swiperWrapper - Container do swiper
  */
-function renderEmptyState(container, message) {
-    container.innerHTML = `
-        <div class="col-12 text-center py-5">
-            <div class="text-muted">
-                <i class="fas fa-inbox fa-3x mb-3"></i>
-                <p class="h5">${message}</p>
+function renderMobileGalleryPiece(piece, swiperWrapper) {
+    const firstImage = piece.pecas_imagens && piece.pecas_imagens.length > 0 
+        ? piece.pecas_imagens[0].url 
+        : 'assets/images/bags.jpg';
+
+    const slideHTML = `
+        <div class="swiper-slide">
+            <div class="featured-card">
+                <div class="featured-card-image">
+                    <img loading="lazy" src="${firstImage}" alt="${piece.titulo}" class="w-100 h-100 object-fit-cover">
+                </div>
+                <div class="featured-card-content">
+                    <h4 class="featured-card-title">${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h4>
+                    <p class="featured-card-subtitle">${piece.descricao || 'DISPONÍVEL SOB ENCOMENDA'}</p>
+                    ${piece.destaque ? '<span class="featured-badge">⭐ Destaque</span>' : ''}
+                </div>
             </div>
         </div>
     `;
+    
+    swiperWrapper.insertAdjacentHTML('beforeend', slideHTML);
 }
 
 /**
- * Inicializa e renderiza todas as peças ativas
+ * Renderiza uma peça na lista completa com estilo mobile-first
+ * @param {Object} piece - Dados da peça
+ * @param {HTMLElement} container - Container onde renderizar
  */
-async function initializeAllPieces() {
-    const container = document.getElementById('pecas-container');
+function renderAllPiece(piece, container) {
+    const firstImage = piece.pecas_imagens && piece.pecas_imagens.length > 0 
+        ? piece.pecas_imagens[0].url 
+        : 'assets/images/bags.jpg';
+
+    const pieceHTML = `
+        <div class="col-6 col-md-6 col-lg-4 mb-4">
+            <div class="gallery-item">
+                <div class="gallery-img" style="background-image: url('${firstImage}');">
+                    <div class="gallery-overlay">
+                        <h3>${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h3>
+                        <p class="gallery-variations">${piece.descricao || 'Peça única feita com amor'}</p>
+                        ${piece.destaque ? '<span class="badge bg-warning text-dark">⭐ Destaque</span>' : ''}
+                    </div>
+                </div>
+                <div class="piece-title mt-2 text-center">
+                    <h5 class="h6 mb-1">${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h5>
+                    ${piece.descricao ? `<p class="small text-muted mb-0">${piece.descricao}</p>` : ''}
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.insertAdjacentHTML('beforeend', pieceHTML);
+}
+
+/**
+ * Renderiza uma peça na estrutura de gallery-item existente
+ * @param {Object} piece - Dados da peça
+ * @param {HTMLElement} container - Container onde renderizar
+ */
+function renderGalleryPiece(piece, container) {
+    const firstImage = piece.pecas_imagens && piece.pecas_imagens.length > 0 
+        ? piece.pecas_imagens[0].url 
+        : 'assets/images/bags.jpg'; // fallback para imagem existente
+
+    const pieceHTML = `
+        <div class="col-md-6 col-lg-3">
+            <div class="gallery-item">
+                <div class="gallery-img" style="background-image: url('${firstImage}');">
+                    <div class="gallery-overlay">
+                        <h3>${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h3>
+                        <p class="gallery-variations">${piece.descricao || 'Peça única feita com amor'}</p>
+                        ${piece.destaque ? '<span class="badge bg-warning text-dark">⭐ Destaque</span>' : ''}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.insertAdjacentHTML('beforeend', pieceHTML);
+}
+
+/**
+ * Renderiza TODAS as imagens de TODAS as peças da coleção verão
+ * @param {Object} piece - Dados da peça
+ * @param {HTMLElement} swiperWrapper - Container do swiper onde renderizar
+ */
+function renderAllSummerImages(piece, swiperWrapper) {
+    // Se não há imagens, não renderiza nada
+    if (!piece.pecas_imagens || piece.pecas_imagens.length === 0) {
+        return;
+    }
+
+    // Renderiza CADA imagem da peça como um slide separado
+    piece.pecas_imagens.forEach((image, index) => {
+        const imageHTML = `
+            <div class="swiper-slide">
+                <div class="gallery-item h-100">
+                    <div class="gallery-img" style="background-image: url('${image.url}');">
+                        <div class="gallery-overlay"></div>
+                    </div>
+                    <div class="gallery-caption">
+                        <h3 class="mb-1">${piece.colecoes?.emoji || '☀️'} ${piece.titulo}</h3>
+                        <p class="mb-0">${piece.descricao || 'Peça especial da coleção de verão'}</p>
+                        ${piece.destaque ? '<span class="badge bg-warning text-dark">⭐ Destaque</span>' : ''}
+                        ${piece.pecas_imagens.length > 1 ? `<small class="text-muted d-block mt-1">Imagem ${index + 1} de ${piece.pecas_imagens.length}</small>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+        swiperWrapper.insertAdjacentHTML('beforeend', imageHTML);
+    });
+}
+
+/**
+ * Renderiza uma peça no carrossel de verão existente (mantida para compatibilidade)
+ * @param {Object} piece - Dados da peça
+ * @param {HTMLElement} swiperWrapper - Container do swiper onde renderizar
+ */
+function renderSummerPiece(piece, swiperWrapper) {
+    const firstImage = piece.pecas_imagens && piece.pecas_imagens.length > 0 
+        ? piece.pecas_imagens[0].url 
+        : 'assets/images/verao1.jpeg'; // fallback para imagem existente
+
+    const pieceHTML = `
+        <div class="swiper-slide">
+            <div class="gallery-item h-100">
+                <div class="gallery-img" style="background-image: url('${firstImage}');">
+                    <div class="gallery-overlay"></div>
+                </div>
+                <div class="gallery-caption">
+                    <h3 class="mb-1">${piece.colecoes?.emoji || '☀️'} ${piece.titulo}</h3>
+                    <p class="mb-0">${piece.descricao || 'Peça especial da coleção de verão'}</p>
+                    ${piece.destaque ? '<span class="badge bg-warning text-dark">⭐ Destaque</span>' : ''}
+                </div>
+            </div>
+        </div>
+    `;
+
+    swiperWrapper.insertAdjacentHTML('beforeend', pieceHTML);
+}
+
+/**
+ * Inicializa a seção de peças em destaque
+ */
+async function initializeFeaturedPieces() {
+    const container = document.getElementById('featured-pieces-container');
     if (!container) return;
 
     try {
-        container.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div></div>';
-        
-        const pieces = await fetchAllActivePieces();
+        const pieces = await fetchFeaturedPieces();
         
         if (pieces.length === 0) {
-            renderEmptyState(container, 'Nenhuma peça encontrada no momento.');
+            container.innerHTML = '<div class="col-12 text-center py-4"><p class="text-muted">Nenhuma peça em destaque no momento.</p></div>';
             return;
         }
 
-        container.innerHTML = '<div class="row"></div>';
-        const row = container.querySelector('.row');
+        const row = container.querySelector('.row') || document.createElement('div');
+        row.className = 'row';
+        row.innerHTML = '';
         
         pieces.forEach(piece => {
-            renderPiece(piece, row);
+            renderFeaturedPiece(piece, row);
         });
+
+        if (!container.contains(row)) {
+            container.appendChild(row);
+        }
 
         // Re-injeta configurações do site após renderização dinâmica
         if (window.injectSiteConfig) {
             window.injectSiteConfig();
         }
 
+        console.log(`Seção de destaque atualizada com ${pieces.length} peças`);
+
     } catch (err) {
-        console.error('Erro ao inicializar peças:', err);
-        renderEmptyState(container, 'Erro ao carregar as peças. Tente novamente mais tarde.');
+        console.error('Erro ao inicializar peças em destaque:', err);
+        container.innerHTML = '<div class="col-12 text-center py-4"><p class="text-muted">Erro ao carregar peças em destaque.</p></div>';
     }
 }
 
 /**
- * Inicializa e renderiza peças da coleção verão
+ * Atualiza a galeria principal com dados do Supabase (apenas peças em destaque)
  */
-async function initializeSummerPieces() {
-    const container = document.getElementById('pecas-verao-container');
-    if (!container) return;
+async function updateGalleryWithSupabaseData() {
+    console.log('🔍 DEBUG: Iniciando updateGalleryWithSupabaseData()');
+    
+    // Desktop Grid
+    const desktopGrid = document.querySelector('#galeria .d-none.d-lg-block .row');
+    // Mobile Carousel
+    const mobileSwiperWrapper = document.querySelector('#galeria .swiper .swiper-wrapper');
+    
+    console.log('🔍 DEBUG: Desktop grid encontrado:', !!desktopGrid);
+    console.log('🔍 DEBUG: Mobile swiper encontrado:', !!mobileSwiperWrapper);
+
+    if (!desktopGrid && !mobileSwiperWrapper) {
+        console.error('❌ Containers da galeria não encontrados');
+        return;
+    }
 
     try {
-        container.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div></div>';
+        console.log('🔍 DEBUG: Buscando peças em destaque...');
+        // Buscar apenas peças em destaque
+        const pieces = await fetchFeaturedPieces();
         
+        console.log('🔍 DEBUG: Peças em destaque recebidas:', pieces.length);
+        
+        if (pieces.length === 0) {
+            console.log('🔍 DEBUG: Nenhuma peça em destaque encontrada, mantendo conteúdo estático');
+            return;
+        }
+
+        // Limpar conteúdo atual
+        if (desktopGrid) desktopGrid.innerHTML = '';
+        if (mobileSwiperWrapper) {
+            mobileSwiperWrapper.innerHTML = '';
+            console.log('🔍 DEBUG: Limpado conteúdo estático do mobile swiper');
+        }
+
+        // Renderizar peças em destaque no desktop
+        if (desktopGrid) {
+            pieces.forEach(piece => {
+                console.log(`🔍 DEBUG: Renderizando peça desktop: ${piece.titulo}`);
+                renderGalleryPiece(piece, desktopGrid);
+            });
+        }
+
+        // Renderizar peças em destaque no mobile
+        if (mobileSwiperWrapper) {
+            pieces.forEach(piece => {
+                console.log(`🔍 DEBUG: Renderizando peça mobile: ${piece.titulo}`);
+                renderMobileGalleryPiece(piece, mobileSwiperWrapper);
+            });
+            console.log(`🔍 DEBUG: ${pieces.length} peças renderizadas no mobile carousel`);
+        }
+
+        // Re-inicializar swiper mobile se existir
+        if (window.gallerySwiper) {
+            window.gallerySwiper.update();
+        }
+
+        // Re-injeta configurações do site após renderização dinâmica
+        if (window.injectSiteConfig) {
+            window.injectSiteConfig();
+        }
+
+        console.log(`✅ Sucesso: Galeria atualizada com ${pieces.length} peças em destaque do Supabase`);
+
+    } catch (err) {
+        console.error('❌ Erro ao atualizar galeria com peças em destaque:', err);
+        console.error('❌ Stack trace:', err.stack);
+    }
+}
+
+// Variável para controle de paginação
+let allPiecesOffset = 0;
+const ALL_PIECES_LIMIT = 6;
+let hasMoreAllPieces = true;
+
+/**
+ * Inicializa a seção de todas as peças com carregamento progressivo (grid)
+ */
+async function initializeAllPiecesSection() {
+    console.log('🔍 DEBUG: Iniciando initializeAllPiecesSection()');
+    
+    const container = document.getElementById('all-pieces-container');
+    const loadMoreBtn = document.getElementById('load-more-pieces');
+    
+    console.log('🔍 DEBUG: Container encontrado:', !!container);
+    console.log('🔍 DEBUG: Botão encontrado:', !!loadMoreBtn);
+    
+    if (!container) {
+        console.error('❌ Container #all-pieces-container não encontrado');
+        return;
+    }
+
+    try {
+        console.log('🔍 DEBUG: Mostrando loader...');
+        // Mostrar loader apenas durante a requisição
+        container.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div></div>';
+        
+        console.log('🔍 DEBUG: Buscando peças paginadas...');
+        // Carregar primeiras peças (todas as peças ativas)
+        const pieces = await fetchAllPiecesPaginated(allPiecesOffset, ALL_PIECES_LIMIT);
+        
+        console.log('🔍 DEBUG: Peças recebidas:', pieces.length);
+        console.log('🔍 DEBUG: Dados da primeira peça:', pieces[0]);
+        
+        // Esconder loader imediatamente após a resposta
+        container.innerHTML = '';
+        
+        if (pieces.length === 0) {
+            console.log('🔍 DEBUG: Nenhuma peça encontrada, mostrando mensagem vazia');
+            container.innerHTML = '<div class="col-12 text-center py-4"><p class="text-muted">Nenhuma peça encontrada no momento.</p></div>';
+            if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+            return;
+        }
+
+        console.log('🔍 DEBUG: Criando row e renderizando peças...');
+        const row = document.createElement('div');
+        row.className = 'row';
+        
+        pieces.forEach((piece, index) => {
+            console.log(`🔍 DEBUG: Renderizando peça ${index + 1}:`, piece.titulo);
+            renderAllPiece(piece, row);
+        });
+
+        console.log('🔍 DEBUG: Adicionando row ao container...');
+        container.appendChild(row);
+
+        allPiecesOffset += pieces.length;
+        hasMoreAllPieces = pieces.length === ALL_PIECES_LIMIT;
+
+        console.log('🔍 DEBUG: Controlando botão "Mostrar mais"...');
+        // Controlar botão "Mostrar mais"
+        if (loadMoreBtn) {
+            loadMoreBtn.style.display = hasMoreAllPieces ? 'inline-block' : 'none';
+        }
+
+        // Re-injeta configurações do site após renderização dinâmica
+        if (window.injectSiteConfig) {
+            window.injectSiteConfig();
+        }
+
+        console.log(`✅ Sucesso: Seção todas peças atualizada com ${pieces.length} peças (total: ${allPiecesOffset})`);
+
+    } catch (err) {
+        console.error('❌ Erro ao inicializar seção todas peças:', err);
+        console.error('❌ Stack trace:', err.stack);
+        // Esconder loader e mostrar mensagem de erro
+        container.innerHTML = '<div class="col-12 text-center py-4"><p class="text-muted">Não foi possível carregar as peças no momento.</p></div>';
+        if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+    }
+}
+
+/**
+ * Carrega mais peças na seção completa
+ */
+async function loadMorePieces() {
+    const loadMoreBtn = document.getElementById('load-more-pieces');
+    if (!loadMoreBtn || !hasMoreAllPieces) return;
+
+    loadMoreBtn.disabled = true;
+    loadMoreBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Carregando...';
+
+    try {
+        const pieces = await fetchAllPiecesPaginated(allPiecesOffset, ALL_PIECES_LIMIT);
+        
+        if (pieces.length === 0) {
+            hasMoreAllPieces = false;
+            loadMoreBtn.style.display = 'none';
+            return;
+        }
+
+        const container = document.getElementById('all-pieces-container');
+        const row = container.querySelector('.row');
+        
+        pieces.forEach(piece => {
+            renderAllPiece(piece, row);
+        });
+
+        allPiecesOffset += pieces.length;
+        hasMoreAllPieces = pieces.length === ALL_PIECES_LIMIT;
+
+        loadMoreBtn.style.display = hasMoreAllPieces ? 'inline-block' : 'none';
+        loadMoreBtn.disabled = false;
+        loadMoreBtn.innerHTML = 'Mostrar mais';
+
+        // Re-injeta configurações do site após renderização dinâmica
+        if (window.injectSiteConfig) {
+            window.injectSiteConfig();
+        }
+
+        console.log(`Carregadas mais ${pieces.length} peças (total: ${allPiecesOffset})`);
+
+    } catch (err) {
+        console.error('Erro ao carregar mais peças:', err);
+        loadMoreBtn.disabled = false;
+        loadMoreBtn.innerHTML = 'Mostrar mais';
+    }
+}
+
+/**
+ * Atualiza a coleção de verão com dados do Supabase
+ */
+async function updateSummerCollectionWithSupabaseData() {
+    const summerSwiperWrapper = document.querySelector('.summer-swiper .swiper-wrapper');
+    if (!summerSwiperWrapper) return;
+
+    try {
         const pieces = await fetchSummerPieces();
         
         if (pieces.length === 0) {
-            renderEmptyState(container, 'Nenhuma peça da coleção verão encontrada.');
+            console.log('Nenhuma peça da coleção verão encontrada no Supabase, mantendo conteúdo estático');
             return;
         }
 
-        container.innerHTML = '<div class="row"></div>';
-        const row = container.querySelector('.row');
-        
+        // Limpar conteúdo atual
+        summerSwiperWrapper.innerHTML = '';
+
+        let totalImages = 0;
+
+        // Renderizar TODAS as imagens de TODAS as peças da coleção verão
         pieces.forEach(piece => {
-            renderPiece(piece, row);
+            renderAllSummerImages(piece, summerSwiperWrapper);
+            if (piece.pecas_imagens) {
+                totalImages += piece.pecas_imagens.length;
+            }
         });
+
+        // Re-inicializar swiper de verão se existir
+        if (window.summerSwiper) {
+            window.summerSwiper.update();
+        }
 
         // Re-injeta configurações do site após renderização dinâmica
         if (window.injectSiteConfig) {
             window.injectSiteConfig();
         }
 
+        console.log(`Coleção verão atualizada: ${pieces.length} peças, ${totalImages} imagens totais`);
+
     } catch (err) {
-        console.error('Erro ao inicializar peças da coleção verão:', err);
-        renderEmptyState(container, 'Erro ao carregar as peças da coleção verão. Tente novamente mais tarde.');
+        console.error('Erro ao atualizar coleção verão:', err);
     }
 }
 
 /**
- * Inicializa todas as funções quando o DOM estiver carregado
+ * Inicializa todas as atualizações quando o DOM estiver carregado
  */
 document.addEventListener('DOMContentLoaded', function() {
-    // Aguardar um pouco para garantir que o site-config.js foi carregado
+    // Aguardar um pouco para garantir que todos os scripts foram carregados
     setTimeout(() => {
-        initializeAllPieces();
-        initializeSummerPieces();
-    }, 100);
+        updateGalleryWithSupabaseData();
+        updateSummerCollectionWithSupabaseData();
+        initializeAllPiecesSection();
+    }, 500);
 });
 
 // Exportar funções para uso global se necessário
 window.SupabaseData = {
     fetchAllActivePieces,
     fetchSummerPieces,
-    initializeAllPieces,
-    initializeSummerPieces
+    fetchFeaturedPieces,
+    fetchAllPiecesPaginated,
+    updateGalleryWithSupabaseData,
+    updateSummerCollectionWithSupabaseData,
+    initializeAllPiecesSection,
+    loadMorePieces
 };
+
+// Tornar loadMorePieces global para acesso via onclick
+window.loadMorePieces = loadMorePieces;
 
 /*
 NOTA: Este código depende das políticas RLS (Row Level Security) do Supabase.

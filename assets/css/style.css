@@ -624,16 +624,6 @@ img.vintage,
         margin-bottom: 1.8rem;
     }
 }
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, #F8BBD0, #B2DFDB, #FFE0B2);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    color: var(--dark-color);
-    text-align: center;
-    padding: 120px 0 80px;
-}
 
 /* Prefer dynamic viewport units when available */
 @supports (min-height: 100dvh) {
@@ -2010,48 +2000,157 @@ footer a:hover {
     }
 }
 
+/* Featured Cards Layout for Peças em Destaque */
+.featured-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.featured-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.featured-card-image {
+    width: 100%;
+    height: 320px;
+    position: relative;
+    overflow: hidden;
+}
+
+.featured-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.featured-card:hover .featured-card-image img {
+    transform: scale(1.05);
+}
+
+.featured-card-content {
+    padding: 1.5rem;
+    text-align: center;
+    background: white;
+}
+
+.featured-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--dark-color);
+    line-height: 1.3;
+}
+
+.featured-card-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0 0 1rem 0;
+    line-height: 1.4;
+}
+
+.featured-badge {
+    display: inline-block;
+    background: var(--warning-color, #ffc107);
+    color: var(--dark-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Mobile adjustments for featured cards */
+@media (max-width: 576px) {
+    .featured-card {
+        max-width: 260px;
+    }
+    
+    .featured-card-image {
+        height: 280px;
+    }
+    
+    .featured-card-content {
+        padding: 1.25rem;
+    }
+    
+    .featured-card-title {
+        font-size: 1rem;
+    }
+    
+    .featured-card-subtitle {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .featured-card {
+        max-width: 240px;
+    }
+    
+    .featured-card-image {
+        height: 240px;
+    }
+    
+    .featured-card-content {
+        padding: 1rem;
+    }
+}
+
 /* Mobile Carousel Styles */
 .products-swiper, .gallery-swiper {
     width: 100%;
-    padding: 1rem 0 3rem;
-    overflow: visible;
+    padding: 0.5rem 0 2rem;
+    overflow: hidden;
+    max-width: 100%;
 }
 
 /* Mobile gallery nav buttons */
 .gallery-swiper .carousel-prev,
 .gallery-swiper .carousel-next {
   position: absolute;
-  top: 50%;
+  top: 40%;
   transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   border: none;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.95);
   color: var(--dark-color);
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  z-index: 5;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 10;
+  font-size: 14px;
 }
 
-.gallery-swiper .carousel-prev { left: 6px; }
-.gallery-swiper .carousel-next { right: 6px; }
+.gallery-swiper .carousel-prev { left: 8px; }
+.gallery-swiper .carousel-next { right: 8px; }
 
 .gallery-swiper .carousel-prev:hover,
-.gallery-swiper .carousel-next:hover { background: var(--primary-color); color: var(--dark-color); }
+.gallery-swiper .carousel-next:hover { background: var(--primary-color); color: white; }
 
+/* Swiper wrapper adjustments */
 .products-swiper .swiper-wrapper,
 .gallery-swiper .swiper-wrapper {
-    padding: 1rem 0;
+    padding: 0.5rem 0;
+    align-items: stretch;
 }
 
 .products-swiper .swiper-slide,
 .gallery-swiper .swiper-slide {
     width: 85%;
+    max-width: 320px;
     transition: transform 0.3s ease;
     height: auto;
+    display: flex;
+    align-items: stretch;
 }
 
 .products-swiper .swiper-slide-active,
@@ -2062,7 +2161,7 @@ footer a:hover {
 .products-swiper .swiper-pagination,
 .gallery-swiper .swiper-pagination {
     position: relative;
-    margin: 2rem 0 0;
+    margin: 1rem 0 0;
     padding: 0.5rem 0;
     bottom: 0;
     display: flex;
@@ -2095,14 +2194,17 @@ footer a:hover {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
 }
 
 .gallery-swiper .gallery-img {
-    height: 300px;
+    height: 280px;
     background-size: cover;
     background-position: center;
     position: relative;
-    border-radius: 12px;
+    border-radius: 12px 12px 0 0;
+    min-height: 280px;
 }
 
 .gallery-swiper .gallery-overlay {
@@ -2111,14 +2213,11 @@ footer a:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6));
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    justify-content: flex-end;
     padding: 1.5rem;
-    color: white;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -2128,10 +2227,32 @@ footer a:hover {
 }
 
 .gallery-swiper .gallery-overlay h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
     color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.gallery-swiper .gallery-caption {
+    padding: 1rem;
+    background: white;
+    border-radius: 0 0 12px 12px;
+    text-align: center;
+}
+
+.gallery-swiper .gallery-caption h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--dark-color);
+}
+
+.gallery-swiper .gallery-caption p {
+    font-size: 0.85rem;
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.4;
 }
 
 .gallery-swiper .btn-outline-light {
@@ -2146,7 +2267,57 @@ footer a:hover {
     background: white;
     color: var(--primary-color);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 576px) {
+    .gallery-swiper {
+        padding: 0.25rem 0 1.5rem;
+    }
+    
+    .gallery-swiper .gallery-img {
+        height: 240px;
+        min-height: 240px;
+    }
+    
+    .gallery-swiper .swiper-slide {
+        width: 90%;
+        max-width: 280px;
+    }
+    
+    .gallery-swiper .carousel-prev,
+    .gallery-swiper .carousel-next {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+        top: 35%;
+    }
+    
+    .gallery-swiper .carousel-prev { left: 4px; }
+    .gallery-swiper .carousel-next { right: 4px; }
+    
+    .gallery-swiper .gallery-caption {
+        padding: 0.75rem;
+    }
+    
+    .gallery-swiper .gallery-caption h3 {
+        font-size: 0.9rem;
+    }
+    
+    .gallery-swiper .gallery-caption p {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .gallery-swiper .gallery-img {
+        height: 200px;
+        min-height: 200px;
+    }
+    
+    .gallery-swiper .swiper-slide {
+        width: 95%;
+        max-width: 260px;
+    }
 }
 
 @media (max-width: 991.98px) {
@@ -2647,4 +2818,73 @@ footer a:hover {
 
 @media (max-width: 575.98px) {
   .summer-collection .thumbs-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+}
+
+/* Ajustes mobile para peças em destaque */
+@media (max-width: 575.98px) {
+  .piece-title {
+    padding: 0 0.5rem;
+  }
+  
+  .piece-title h5 {
+    font-size: 0.9rem;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+  
+  .piece-title p {
+    font-size: 0.8rem;
+    line-height: 1.2;
+  }
+}
+
+/* Melhorias para a coleção de verão em mobile */
+@media (max-width: 767.98px) {
+  .summer-collection .ratio {
+    max-height: 60vh;
+  }
+  
+  .summer-collection video {
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .summer-swiper .swiper-slide {
+    height: auto;
+  }
+  
+  .summer-swiper .gallery-img {
+    padding-bottom: 75%; /* Proporção 4:3 melhor para mobile */
+  }
+  
+  .summer-swiper .gallery-caption {
+    padding: 1rem;
+  }
+  
+  .summer-swiper .gallery-caption h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .summer-swiper .gallery-caption p {
+    font-size: 0.875rem;
+  }
+}
+
+/* Garantir que não haja overflow horizontal */
+@media (max-width: 575.98px) {
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  .row {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+  
+  .col-6 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
 }
