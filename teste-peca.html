@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Página da Peça | Nó Encantado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/peca.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-5">
+        <h1>Teste de Página Individual da Peça</h1>
+        <p>Use os links abaixo para testar diferentes cenários:</p>
+        
+        <div class="list-group">
+            <a href="peca.html?id=teste-id" class="list-group-item list-group-item-action">
+                <i class="fas fa-link me-2"></i>
+                Testar com ID (teste-id)
+            </a>
+            <a href="peca.html?slug=peca-teste" class="list-group-item list-group-item-action">
+                <i class="fas fa-link me-2"></i>
+                Testar com Slug (peca-teste)
+            </a>
+            <a href="peca.html?id=invalid" class="list-group-item list-group-item-action">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Testar erro (ID inválido)
+            </a>
+        </div>
+        
+        <div class="mt-4">
+            <a href="index.html" class="btn btn-primary">
+                <i class="fas fa-home me-2"></i>
+                Voltar para página inicial
+            </a>
+        </div>
+    </div>
+</body>
+</html>

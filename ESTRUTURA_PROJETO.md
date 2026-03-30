@@ -11,8 +11,11 @@ lp-noencantado/
 ├── README.md                 # Documentação do projeto
 ├── _redirects                # Configurações de redirecionamento (provavelmente para Netlify/Vercel)
 ├── sitemap.xml              # Sitemap para SEO
+├── PAGINAS-INDIVIDUAIS.md    # Documentação das páginas individuais de peças
 ├── index.html               # Página principal (38KB)
 ├── index.html.backup        # Backup da página principal (28KB)
+├── peca.html                # Página individual da peça (criado)
+├── teste-peca.html          # Página de testes para funcionalidades (criado)
 ├── admin/                   # Diretório vazio (possível área administrativa)
 ├── pages/                   # Páginas secundárias
 │   ├── about.html          # Página Sobre (7.5KB)
@@ -21,9 +24,14 @@ lp-noencantado/
 │   └── services.html       # Página de Serviços (9.8KB)
 └── assets/                 # Recursos estáticos
     ├── css/                # Estilos
-    │   └── style.css       # CSS principal (53KB)
+    │   ├── style.css       # CSS principal (53KB)
+    │   └── peca.css        # CSS específico para página da peça (criado)
     ├── js/                 # JavaScript
-    │   └── main.js         # JavaScript principal (17KB)
+    │   ├── main.js         # JavaScript principal (17KB)
+    │   ├── site-config.js  # Configurações centralizadas do site
+    │   ├── supabase-data.js # Integração com Supabase
+    │   ├── card-peca.js    # Componente de cards de peças
+    │   └── peca.js         # Funcionalidades da página individual (criado)
     └── images/             # Imagens e mídias
         ├── anna-beatriz.png      # Foto da artesã (946KB)
         ├── bags.jpg              # Imagem de bolsas (2.7MB)
@@ -315,6 +323,48 @@ Sitemap XML para otimização de SEO com todas as páginas do site
 - **Status**: Concluído
 - **Testes realizados**: Layout revertido, mobile funcionando, desktop intacto
 - **Próximos passos**: Validar que apenas mobile foi corrigido
+
+### 30/03/2026 - Implementação de Páginas Individuais para Peças
+- **Tipo**: Funcionalidade/Arquitetura
+- **Arquivos afetados**: 
+  - `peca.html` (criado)
+  - `assets/css/peca.css` (criado)
+  - `assets/js/peca.js` (criado)
+  - `assets/js/card-peca.js` (modificado)
+  - `assets/js/supabase-data.js` (estendido)
+  - `teste-peca.html` (criado)
+  - `PAGINAS-INDIVIDUAIS.md` (criado)
+- **Descrição**: Implementada página individual dinâmica para cada peça de crochê, substituindo o modal por navegação completa com rota dinâmica, galeria de imagens, lightbox/zoom, e integração com WhatsApp
+- **Motivo**: Melhorar experiência do usuário com páginas dedicadas, melhorar SEO com URLs amigáveis, e permitir apresentação completa de cada peça
+- **Impacto**: 
+  - Cards agora navegam para páginas individuais em vez de abrir modal
+  - Cada peça tem URL própria (peca.html?id=[uuid] ou peca.html?slug=[slug])
+  - Galeria completa com miniaturas e lightbox
+  - Botão de encomenda com mensagem personalizada
+  - Metadata dinâmica para SEO
+  - Loading e error states otimizados
+- **Funcionalidades implementadas**:
+  - Rota dinâmica com suporte a ID e slug
+  - Galeria de imagens com miniaturas navegáveis
+  - Lightbox/zoom com navegação por teclado
+  - Botão "Encomendar" com mensagem pré-preenchida
+  - SEO metadata dinâmica (Open Graph, Twitter Cards)
+  - Design mobile-first responsivo
+  - Loading states e error handling
+  - Acessibilidade completa (keyboard navigation, screen reader)
+- **Dependências**: Supabase, Bootstrap 5, Font Awesome
+- **Responsável**: Sistema de IA Cascade
+- **Status**: Concluído
+- **Testes realizados**: 
+  - Criação de página de testes (teste-peca.html)
+  - Validação de navegação por ID e slug
+  - Teste de galeria e lightbox
+  - Verificação de responsividade
+  - Teste de integração WhatsApp
+- **Próximos passos**: 
+  - Testar com dados reais do Supabase
+  - Monitorar performance em produção
+  - Considerar migração para Next.js no futuro
 
 ### [Data] - [Título da Mudança]
 - **Tipo**: [Adição/Modificação/Remoção/Correção]

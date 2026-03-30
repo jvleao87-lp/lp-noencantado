@@ -11,6 +11,45 @@ const supabaseClient = createClient(
 );
 
 /**
+ * Busca uma peça específica por ID ou slug
+ * @param {string} identifier - ID ou slug da peça
+ * @returns {Promise<Object>} Dados da peça
+ */
+async function fetchPecaByIdentifier(identifier) {
+    try {
+        // Verificar se identifier é UUID ou slug
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(identifier);
+        
+        let query = supabaseClient
+            .from('pecas')
+            .select(`
+                *,
+                colecoes (nome, emoji, ativa),
+                pecas_imagens (url, categoria, ordem)
+            `)
+            .eq('ativa', true);
+
+        if (isUuid) {
+            query = query.eq('id', identifier);
+        } else {
+            query = query.eq('slug', identifier);
+        }
+
+        const { data, error } = await query.single();
+
+        if (error) {
+            console.error('Erro ao buscar peça:', error);
+            return null;
+        }
+
+        return data;
+    } catch (err) {
+        console.error('Erro inesperado ao buscar peça:', err);
+        return null;
+    }
+}
+
+/**
  * Busca peças em destaque com imagens e coleções
  * @returns {Promise<Array>} Lista de peças em destaque
  */
@@ -405,9 +444,10 @@ let hasMoreAllPieces = true;
 
 /**
  * Inicializa a seção de todas as peças com carregamento progressivo (grid)
+ * Usa o novo componente CardPeca para design minimalista
  */
 async function initializeAllPiecesSection() {
-    console.log('🔍 DEBUG: Iniciando initializeAllPiecesSection()');
+    console.log('🔍 DEBUG: Iniciando initializeAllPiecesSection() com CardPeca');
     
     const container = document.getElementById('all-pieces-container');
     const loadMoreBtn = document.getElementById('load-more-pieces');
@@ -442,17 +482,10 @@ async function initializeAllPiecesSection() {
             return;
         }
 
-        console.log('🔍 DEBUG: Criando row e renderizando peças...');
-        const row = document.createElement('div');
-        row.className = 'row';
+        console.log('🔍 DEBUG: Renderizando peças com CardPeca...');
         
-        pieces.forEach((piece, index) => {
-            console.log(`🔍 DEBUG: Renderizando peça ${index + 1}:`, piece.titulo);
-            renderAllPiece(piece, row);
-        });
-
-        console.log('🔍 DEBUG: Adicionando row ao container...');
-        container.appendChild(row);
+        // Usar o novo componente CardPeca
+        renderizarCardsPeca(pieces, container);
 
         allPiecesOffset += pieces.length;
         hasMoreAllPieces = pieces.length === ALL_PIECES_LIMIT;
@@ -480,7 +513,7 @@ async function initializeAllPiecesSection() {
 }
 
 /**
- * Carrega mais peças na seção completa
+ * Carrega mais peças na seção completa usando CardPeca
  */
 async function loadMorePieces() {
     const loadMoreBtn = document.getElementById('load-more-pieces');
@@ -499,10 +532,11 @@ async function loadMorePieces() {
         }
 
         const container = document.getElementById('all-pieces-container');
-        const row = container.querySelector('.row');
+        const gridContainer = container.querySelector('.cards-peca-grid');
         
+        // Adicionar novas peças ao grid existente
         pieces.forEach(piece => {
-            renderAllPiece(piece, row);
+            new CardPeca(piece, gridContainer);
         });
 
         allPiecesOffset += pieces.length;
@@ -587,6 +621,7 @@ document.addEventListener('DOMContentLoaded', function() {
 window.updateGalleryWithSupabaseData = updateGalleryWithSupabaseData;
 window.updateSummerCollectionWithSupabaseData = updateSummerCollectionWithSupabaseData;
 window.initializeAllPiecesSection = initializeAllPiecesSection;
+window.fetchPecaByIdentifier = fetchPecaByIdentifier;
 
 // Tornar loadMorePieces global para acesso via onclick
 window.loadMorePieces = loadMorePieces;
