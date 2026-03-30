@@ -605,7 +605,7 @@ Cada criação é única, feita sob medida para quem acredita no poder do encant
             // Inicialização do Swiper da Galeria (Mobile)
             const gallerySwiper = new Swiper('.gallery-swiper', {
                 loop: true,
-                spaceBetween: 20,
+                spaceBetween: 16,
                 slidesPerView: 1,
                 centeredSlides: true,
                 initialSlide: 0,
@@ -619,24 +619,23 @@ Cada criação é única, feita sob medida para quem acredita no poder do encant
                 },
                 breakpoints: {
                     576: {
-                        slidesPerView: 1.2,
-                        spaceBetween: 25,
+                        slidesPerView: 1.1,
+                        spaceBetween: 20,
                         centeredSlides: true
                     },
                     768: {
-                        slidesPerView: 1.5,
-                        spaceBetween: 30,
+                        slidesPerView: 1.2,
+                        spaceBetween: 24,
                         centeredSlides: true
                     },
                     992: {
-                        slidesPerView: 2,
+                        slidesPerView: 1.3,
                         spaceBetween: 30,
-                        centeredSlides: false
+                        centeredSlides: true
                     }
                 },
                 on: {
                     init: function () {
-                        // Garantir altura correta após inicialização
                         this.update();
                     }
                 }

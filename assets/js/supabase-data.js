@@ -169,14 +169,14 @@ function renderMobileGalleryPiece(piece, swiperWrapper) {
 
     const slideHTML = `
         <div class="swiper-slide">
-            <div class="featured-card">
-                <div class="featured-card-image">
-                    <img loading="lazy" src="${firstImage}" alt="${piece.titulo}" class="w-100 h-100 object-fit-cover">
+            <div class="featured-card-clean">
+                <div class="featured-image-container">
+                    <img loading="lazy" src="${firstImage}" alt="${piece.titulo}" class="featured-image">
+                    ${piece.destaque ? '<div class="featured-badge-clean">⭐</div>' : ''}
                 </div>
-                <div class="featured-card-content">
-                    <h4 class="featured-card-title">${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h4>
-                    <p class="featured-card-subtitle">${piece.descricao || 'DISPONÍVEL SOB ENCOMENDA'}</p>
-                    ${piece.destaque ? '<span class="featured-badge">⭐ Destaque</span>' : ''}
+                <div class="featured-content-clean">
+                    <h4 class="featured-title-clean">${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h4>
+                    ${piece.descricao ? `<p class="featured-subtitle-clean">${piece.descricao}</p>` : ''}
                 </div>
             </div>
         </div>
@@ -224,16 +224,17 @@ function renderAllPiece(piece, container) {
 function renderGalleryPiece(piece, container) {
     const firstImage = piece.pecas_imagens && piece.pecas_imagens.length > 0 
         ? piece.pecas_imagens[0].url 
-        : 'assets/images/bags.jpg'; // fallback para imagem existente
+        : 'assets/images/bags.jpg';
 
     const pieceHTML = `
         <div class="col-md-6 col-lg-3">
-            <div class="gallery-item">
-                <div class="gallery-img" style="background-image: url('${firstImage}');">
-                    <div class="gallery-overlay">
-                        <h3>${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h3>
-                        <p class="gallery-variations">${piece.descricao || 'Peça única feita com amor'}</p>
-                        ${piece.destaque ? '<span class="badge bg-warning text-dark">⭐ Destaque</span>' : ''}
+            <div class="ratio ratio-9x16 mb-3 featured-slide">
+                <img loading="lazy" src="${firstImage}" alt="${piece.titulo}" class="w-100 h-100 object-fit-cover">
+                <div class="featured-slide-overlay">
+                    <div class="featured-slide-content">
+                        <h4 class="featured-slide-title">${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h4>
+                        ${piece.descricao ? `<p class="featured-slide-subtitle">${piece.descricao}</p>` : ''}
+                        ${piece.destaque ? '<span class="featured-slide-badge">⭐ Destaque</span>' : ''}
                     </div>
                 </div>
             </div>
