@@ -158,31 +158,34 @@ function renderFeaturedPiece(piece, container) {
 }
 
 /**
- * Renderiza uma peça no carousel mobile da galeria
+ * Renderiza uma peça em destaque para o grid simples
  * @param {Object} piece - Dados da peça
- * @param {HTMLElement} swiperWrapper - Container do swiper
+ * @param {HTMLElement} container - Container onde renderizar
  */
-function renderMobileGalleryPiece(piece, swiperWrapper) {
+function renderFeaturedPieceGrid(piece, container) {
     const firstImage = piece.pecas_imagens && piece.pecas_imagens.length > 0 
         ? piece.pecas_imagens[0].url 
         : 'assets/images/bags.jpg';
 
-    const slideHTML = `
-        <div class="swiper-slide">
-            <div class="gallery-item h-100">
+    const pieceHTML = `
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <div class="gallery-item">
                 <div class="gallery-img" style="background-image: url('${firstImage}');">
-                    <div class="gallery-overlay"></div>
+                    <div class="gallery-overlay">
+                        <h3>${piece.colecoes?.emoji || '⭐'} ${piece.titulo}</h3>
+                        <p>${piece.descricao || 'Peça especial em destaque'}</p>
+                    </div>
                 </div>
                 <div class="gallery-caption">
-                    <h3 class="mb-1">${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h3>
+                    <h3 class="mb-1">${piece.colecoes?.emoji || '⭐'} ${piece.titulo}</h3>
                     <p class="mb-0">${piece.descricao || 'Peça especial da coleção'}</p>
                     ${piece.destaque ? '<span class="badge bg-warning text-dark">⭐ Destaque</span>' : ''}
                 </div>
             </div>
         </div>
     `;
-    
-    swiperWrapper.insertAdjacentHTML('beforeend', slideHTML);
+
+    container.insertAdjacentHTML('beforeend', pieceHTML);
 }
 
 /**
@@ -349,16 +352,13 @@ async function initializeFeaturedPieces() {
 async function updateGalleryWithSupabaseData() {
     console.log('🔍 DEBUG: Iniciando updateGalleryWithSupabaseData()');
     
-    // Desktop Grid
-    const desktopGrid = document.querySelector('#galeria .d-none.d-lg-block .row');
-    // Mobile Carousel
-    const mobileSwiperWrapper = document.querySelector('#galeria .swiper .swiper-wrapper');
+    // Simple Grid for all screen sizes
+    const featuredGrid = document.getElementById('featured-pieces-grid');
     
-    console.log('🔍 DEBUG: Desktop grid encontrado:', !!desktopGrid);
-    console.log('🔍 DEBUG: Mobile swiper encontrado:', !!mobileSwiperWrapper);
+    console.log('🔍 DEBUG: Grid de destaque encontrado:', !!featuredGrid);
 
-    if (!desktopGrid && !mobileSwiperWrapper) {
-        console.error('❌ Containers da galeria não encontrados');
+    if (!featuredGrid) {
+        console.error('❌ Container da galeria de destaque não encontrado');
         return;
     }
 
@@ -370,49 +370,31 @@ async function updateGalleryWithSupabaseData() {
         console.log('🔍 DEBUG: Peças em destaque recebidas:', pieces.length);
         
         if (pieces.length === 0) {
-            console.log('🔍 DEBUG: Nenhuma peça em destaque encontrada, mantendo conteúdo estático');
+            console.log('🔍 DEBUG: Nenhuma peça em destaque encontrada, mostrando mensagem vazia');
+            featuredGrid.innerHTML = '<div class="col-12 text-center py-4"><p class="text-muted">Nenhuma peça em destaque no momento.</p></div>';
             return;
         }
 
         // Limpar conteúdo atual
-        if (desktopGrid) desktopGrid.innerHTML = '';
-        if (mobileSwiperWrapper) {
-            mobileSwiperWrapper.innerHTML = '';
-            console.log('🔍 DEBUG: Limpado conteúdo estático do mobile swiper');
-        }
+        featuredGrid.innerHTML = '';
 
-        // Renderizar peças em destaque no desktop
-        if (desktopGrid) {
-            pieces.forEach(piece => {
-                console.log(`🔍 DEBUG: Renderizando peça desktop: ${piece.titulo}`);
-                renderGalleryPiece(piece, desktopGrid);
-            });
-        }
+        // Renderizar peças em destaque no grid
+        pieces.forEach(piece => {
+            console.log(`🔍 DEBUG: Renderizando peça: ${piece.titulo}`);
+            renderFeaturedPieceGrid(piece, featuredGrid);
+        });
 
-        // Renderizar peças em destaque no mobile
-        if (mobileSwiperWrapper) {
-            pieces.forEach(piece => {
-                console.log(`🔍 DEBUG: Renderizando peça mobile: ${piece.titulo}`);
-                renderMobileGalleryPiece(piece, mobileSwiperWrapper);
-            });
-            console.log(`🔍 DEBUG: ${pieces.length} peças renderizadas no mobile carousel`);
-        }
-
-        // Re-inicializar swiper mobile se existir
-        if (window.gallerySwiper) {
-            window.gallerySwiper.update();
-        }
+        console.log(`✅ Sucesso: Galeria atualizada com ${pieces.length} peças em destaque do Supabase`);
 
         // Re-injeta configurações do site após renderização dinâmica
         if (window.injectSiteConfig) {
             window.injectSiteConfig();
         }
 
-        console.log(`✅ Sucesso: Galeria atualizada com ${pieces.length} peças em destaque do Supabase`);
-
     } catch (err) {
         console.error('❌ Erro ao atualizar galeria com peças em destaque:', err);
         console.error('❌ Stack trace:', err.stack);
+        featuredGrid.innerHTML = '<div class="col-12 text-center py-4"><p class="text-muted">Não foi possível carregar as peças em destaque.</p></div>';
     }
 }
 
@@ -602,16 +584,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Exportar funções para uso global se necessário
-window.SupabaseData = {
-    fetchAllActivePieces,
-    fetchSummerPieces,
-    fetchFeaturedPieces,
-    fetchAllPiecesPaginated,
-    updateGalleryWithSupabaseData,
-    updateSummerCollectionWithSupabaseData,
-    initializeAllPiecesSection,
-    loadMorePieces
-};
+window.updateGalleryWithSupabaseData = updateGalleryWithSupabaseData;
+window.updateSummerCollectionWithSupabaseData = updateSummerCollectionWithSupabaseData;
+window.initializeAllPiecesSection = initializeAllPiecesSection;
 
 // Tornar loadMorePieces global para acesso via onclick
 window.loadMorePieces = loadMorePieces;

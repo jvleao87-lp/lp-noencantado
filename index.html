@@ -200,30 +200,9 @@ Cada criação é única, feita sob medida para quem acredita no poder do encant
             </p>
         </div>
 
-        <!-- Desktop Grid -->
-        <div class="d-none d-lg-block">
-            <div class="row g-4" id="featured-pieces-desktop">
-                <!-- Conteúdo dinâmico do Supabase -->
-            </div>
-        </div>
-
-        <!-- Mobile Carousel -->
-        <div class="d-block d-lg-none">
-            <div class="swiper gallery-swiper">
-                <div class="swiper-wrapper" id="featured-pieces-mobile">
-                    <!-- Conteúdo dinâmico do Supabase -->
-                </div>
-
-                <div class="swiper-pagination"></div>
-
-                <button type="button" class="carousel-prev" aria-label="Peça anterior">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-
-                <button type="button" class="carousel-next" aria-label="Próxima peça">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
+        <!-- Simple Grid for All Screen Sizes -->
+        <div class="row g-4" id="featured-pieces-grid">
+            <!-- Conteúdo dinâmico do Supabase -->
         </div>
 
         <div class="text-center mt-4">
@@ -600,45 +579,6 @@ Cada criação é única, feita sob medida para quem acredita no poder do encant
             });
             window.addEventListener('load', () => {
                 summerSwiper.update();
-            });
-
-            // Inicialização do Swiper da Galeria (Mobile)
-            const gallerySwiper = new Swiper('.gallery-swiper', {
-                loop: true,
-                spaceBetween: 12,
-                slidesPerView: 1,
-                centeredSlides: true,
-                initialSlide: 0,
-                pagination: {
-                    el: '.gallery-swiper .swiper-pagination',
-                    clickable: true,
-                },
-                navigation: {
-                    prevEl: '.gallery-swiper .carousel-prev',
-                    nextEl: '.gallery-swiper .carousel-next',
-                },
-                breakpoints: {
-                    576: {
-                        slidesPerView: 1,
-                        spaceBetween: 16,
-                        centeredSlides: true
-                    },
-                    768: {
-                        slidesPerView: 1.1,
-                        spaceBetween: 20,
-                        centeredSlides: true
-                    },
-                    992: {
-                        slidesPerView: 1.2,
-                        spaceBetween: 24,
-                        centeredSlides: true
-                    }
-                },
-                on: {
-                    init: function () {
-                        this.update();
-                    }
-                }
             });
 
             // Preloader removido
