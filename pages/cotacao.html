@@ -123,7 +123,7 @@
                         <a class="nav-link" href="../index.html#sobre">Sobre</a>
                     </li>
                     <li class="nav-item d-flex align-items-center">
-                        <a href="http://wa.me/5581992664924" class="btn btn-primary ms-lg-3" target="_blank">
+                        <a href="#" data-whatsapp-link class="btn btn-primary ms-lg-3" target="_blank">
                             Fazer minha encomenda ✨
                         </a>
                     </li>
@@ -193,8 +193,8 @@
                     </a>
                     <p class="footer-about">Peças de crochê feitas à mão com amor em Pernambuco.</p>
                     <div class="footer-social">
-                        <a href="https://www.instagram.com/_noencantado/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="http://wa.me/5581992664924" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" data-instagram-link target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" data-whatsapp-link target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
                 <div class="footer-links">
@@ -210,7 +210,7 @@
                 <div class="footer-contact">
                     <h4>Entre em Contato</h4>
                     <p><i class="fas fa-map-marker-alt me-2"></i> Pernambuco, Brasil</p>
-                    <p><i class="fas fa-phone-alt me-2"></i> <a href="tel:+5581992664924">(81) 99266-4924</a></p>
+                    <p><i class="fas fa-phone-alt me-2"></i> <a href="tel:+5581952325974" data-phone-display>(81) 9523-2597</a></p>
                     <p><i class="fas fa-envelope me-2"></i> <a href="mailto:contato@noencantado.shop">contato@noencantado.shop</a></p>
                 </div>
             </div>
@@ -237,6 +237,7 @@
     </div>
 
     <!-- Scripts -->
+    <script src="../assets/js/site-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanilla-masker@1.1.1/lib/vanilla-masker.min.js"></script>
     <script>
@@ -246,7 +247,6 @@
                 document.getElementById('current-year').textContent = new Date().getFullYear();
             });
 
-            const numero = '5581992664924'; // número da loja (DDI+DDD+número)
             const byId = id => document.getElementById(id);
 
             const normalizeOptional = (v) => {
@@ -268,12 +268,13 @@
                     return;
                 }
 
-                // Usando o formato original da mensagem, mas com os campos corretos
+                // Usa a configuração centralizada
+                const numero = window.SiteConfig ? window.SiteConfig.phoneRaw : '5581952325974';
                 const mensagem = 
-                    `*Nova solicitação de cotação*` +
-                    `%0A%0A*Nome:* ${encodeURIComponent(nome.trim())}` +
-                    `%0A*Cidade:* ${cidade ? encodeURIComponent(cidade.trim()) : "'"}` +
-                    `%0A%0A*Detalhes da Peça*` +
+                    `*Nova Cotação - Nó Encantado*%0A%0A` +
+                    `*Nome:* ${encodeURIComponent(nome.trim())}` +
+                    `%0A*Cidade:* ${encodeURIComponent(cidade.trim())}` +
+                    `%0A%0A*Descrição da Peça:*` +
                     `%0A${encodeURIComponent(descricao.trim())}` +
                     `%0A%0A*Observações:* ${observ ? encodeURIComponent(observ.trim()) : "'"}`;
 
