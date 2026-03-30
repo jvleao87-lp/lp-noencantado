@@ -169,14 +169,14 @@ function renderMobileGalleryPiece(piece, swiperWrapper) {
 
     const slideHTML = `
         <div class="swiper-slide">
-            <div class="featured-card-clean">
-                <div class="featured-image-container">
-                    <img loading="lazy" src="${firstImage}" alt="${piece.titulo}" class="featured-image">
-                    ${piece.destaque ? '<div class="featured-badge-clean">⭐</div>' : ''}
+            <div class="gallery-item h-100">
+                <div class="gallery-img" style="background-image: url('${firstImage}');">
+                    <div class="gallery-overlay"></div>
                 </div>
-                <div class="featured-content-clean">
-                    <h4 class="featured-title-clean">${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h4>
-                    ${piece.descricao ? `<p class="featured-subtitle-clean">${piece.descricao}</p>` : ''}
+                <div class="gallery-caption">
+                    <h3 class="mb-1">${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h3>
+                    <p class="mb-0">${piece.descricao || 'Peça especial da coleção'}</p>
+                    ${piece.destaque ? '<span class="badge bg-warning text-dark">⭐ Destaque</span>' : ''}
                 </div>
             </div>
         </div>
@@ -228,13 +228,12 @@ function renderGalleryPiece(piece, container) {
 
     const pieceHTML = `
         <div class="col-md-6 col-lg-3">
-            <div class="ratio ratio-9x16 mb-3 featured-slide">
-                <img loading="lazy" src="${firstImage}" alt="${piece.titulo}" class="w-100 h-100 object-fit-cover">
-                <div class="featured-slide-overlay">
-                    <div class="featured-slide-content">
-                        <h4 class="featured-slide-title">${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h4>
-                        ${piece.descricao ? `<p class="featured-slide-subtitle">${piece.descricao}</p>` : ''}
-                        ${piece.destaque ? '<span class="featured-slide-badge">⭐ Destaque</span>' : ''}
+            <div class="gallery-item">
+                <div class="gallery-img" style="background-image: url('${firstImage}');">
+                    <div class="gallery-overlay">
+                        <h3>${piece.colecoes?.emoji || '🧶'} ${piece.titulo}</h3>
+                        <p class="gallery-variations">${piece.descricao || 'Peça única feita com amor'}</p>
+                        ${piece.destaque ? '<span class="badge bg-warning text-dark">⭐ Destaque</span>' : ''}
                     </div>
                 </div>
             </div>
