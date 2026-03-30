@@ -94,18 +94,36 @@ async function fetchPecaByIdentifier(identifier) {
         // ETAPA 3: Buscar imagens da peça
         console.log('🔍 DEBUG: Buscando imagens da peça ID:', pecaData.id);
         
-        const { data: imagensData, error: imagensError } = await supabaseClient
-            .from('pecas_imagens')
-            .select('url, categoria, ordem')
-            .eq('peca_id', pecaData.id)
-            .order('ordem', { ascending: true });
+        let imagensData = [];
+        let imagensError = null;
+        
+        try {
+            const { data: imagensResult, error: imagensQueryError } = await supabaseClient
+                .from('pecas_imagens')
+                .select('url, categoria')
+                .eq('peca_id', pecaData.id);
 
-        console.log('🔍 DEBUG: Resultado da busca de imagens:');
-        console.log('  - Data:', imagensData);
-        console.log('  - Error:', imagensError);
+            console.log('🔍 DEBUG: Resultado da busca de imagens:');
+            console.log('  - Data:', imagensResult);
+            console.log('  - Error:', imagensQueryError);
 
-        if (imagensError) {
-            console.warn('⚠️ DEBUG: Erro ao buscar imagens (continuando sem imagens):', imagensError);
+            if (imagensQueryError) {
+                console.warn('⚠️ DEBUG: Erro ao buscar imagens (continuando sem imagens):', imagensQueryError);
+                imagensError = imagensQueryError;
+            } else {
+                imagensData = imagensResult || [];
+                console.log('✅ DEBUG: Imagens da peça carregadas com sucesso:', {
+                    peca_id: pecaData.id,
+                    total_imagens: imagensData.length,
+                    imagens: imagensData.map(img => ({
+                        url: img.url,
+                        categoria: img.categoria
+                    }))
+                });
+            }
+        } catch (err) {
+            console.error('❌ DEBUG: Erro inesperado ao buscar imagens:', err);
+            imagensError = err;
         }
 
         // ETAPA 4: Montar objeto completo
@@ -190,11 +208,15 @@ async function fetchAllPiecesPaginated(offset = 0, limit = 6) {
 }
 
 /**
- * Busca todas as peças ativas com imagens e coleções
+ * Busca todas as peças ativas com imagens e coleções - VERSÃO DEBUG
  * @returns {Promise<Array>} Lista de peças ativas
  */
 async function fetchAllActivePieces() {
+    console.log('🔍 DEBUG: fetchAllActivePieces iniciado');
+    
     try {
+        console.log('🔍 DEBUG: Buscando peças ativas no Supabase...');
+        
         const { data, error } = await supabaseClient
             .from('pecas')
             .select(`
@@ -206,14 +228,38 @@ async function fetchAllActivePieces() {
             .eq('colecoes.ativa', true)
             .order('created_at', { ascending: false });
 
+        console.log('🔍 DEBUG: Resultado da busca de peças:');
+        console.log('  - Data:', data);
+        console.log('  - Error:', error);
+        console.log('🔍 DEBUG: Total de peças retornadas:', data?.length || 0);
+
         if (error) {
-            console.error('Erro ao buscar peças ativas:', error);
+            console.error('❌ DEBUG: Erro ao buscar peças ativas:', error);
             return [];
         }
 
-        return data || [];
+        if (!data || data.length === 0) {
+            console.log('🔍 DEBUG: Nenhuma peça ativa encontrada');
+            return [];
+        }
+
+        // Log detalhado de cada peça
+        data.forEach((peca, index) => {
+            console.log(`🔍 DEBUG: Peça ${index + 1}:`, {
+                id: peca.id,
+                titulo: peca.titulo,
+                slug: peca.slug,
+                ativa: peca.ativa,
+                total_imagens: peca.pecas_imagens?.length || 0,
+                colecao: peca.colecoes?.nome || 'Sem coleção'
+            });
+        });
+
+        console.log('✅ DEBUG: fetchAllActivePieces concluído com sucesso');
+        return data;
+
     } catch (err) {
-        console.error('Erro inesperado ao buscar peças:', err);
+        console.error('❌ DEBUG: Erro inesperado ao buscar peças ativas:', err);
         return [];
     }
 }

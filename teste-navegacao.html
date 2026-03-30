@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Navegação de Peças | Nó Encantado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@300;400;600&family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/peca.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-5">
+        <h1>🔍 Teste de Navegação de Peças</h1>
+        <p>Esta página testa o fluxo completo: listagem → clique → página individual</p>
+        
+        <!-- Seção de Debug -->
+        <div class="alert alert-info mb-4">
+            <h5>📋 Instruções:</h5>
+            <ol>
+                <li>Abra o console (F12)</li>
+                <li>Observe os logs 🔍 DEBUG</li>
+                <li>Clique em diferentes peças abaixo</li>
+                <li>Verifique se cada peça abre sua própria página</li>
+                <li>Volte e teste outra peça</li>
+            </ol>
+        </div>
+        
+        <!-- Cards de Teste -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h3>🎯 Peças Carregadas</h3>
+                <div id="test-cards-container">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Carregando peças...</span>
+                        </div>
+                        <p class="mt-2">Carregando peças para teste...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Debug Info -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>🔍 Logs Esperados ao Clicar</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="small">
+                            <li>🔍 DEBUG: Card clicado!</li>
+                            <li>🔍 DEBUG: Peça no card: {id: "...", titulo: "..."}</li>
+                            <li>🔍 DEBUG: ID da peça: uuid-específico</li>
+                            <li>🔍 DEBUG: Título da peça: nome-da-peça</li>
+                            <li>🔍 DEBUG: Usando ID na URL: peca.html?id=...</li>
+                            <li>🔍 DEBUG: Navegando para: url-completa</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>🔍 Logs Esperados na Página da Peça</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="small">
+                            <li>🔍 DEBUG: Extraindo ID da URL...</li>
+                            <li>🔍 DEBUG: ID recebido: uuid-do-card-clicado</li>
+                            <li>🔍 DEBUG: Iniciando busca da peça...</li>
+                            <li>🔍 DEBUG: Peça encontrada: nome-correto</li>
+                            <li>🔍 DEBUG: renderPeca iniciado</li>
+                            <li>🔍 DEBUG: Peça a ser renderizada: dados-corretos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Problemas Comuns -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h6>⚠️ Problemas a Verificar</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h6>1. Cards com IDs Iguais</h6>
+                                <p class="small">Se todos os cards mostram o mesmo ID, o problema está na listagem.</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>2. URL Não Muda</h6>
+                                <p class="small">Se a URL não mudar ao clicar, o problema está no clique.</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>3. Conteúdo Repetido</h6>
+                                <p class="small">Se a URL mudar mas o conteúdo for igual, o problema está na página individual.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="index.html" class="btn btn-primary">
+                <i class="fas fa-home me-2"></i>
+                Voltar para página inicial
+            </a>
+            <a href="debug-peca.html" class="btn btn-outline-secondary ms-2">
+                <i class="fas fa-bug me-2"></i>
+                Página de Debug
+            </a>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/site-config.js"></script>
+    <script src="assets/js/supabase-data.js"></script>
+    <script src="assets/js/card-peca.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Função para carregar e renderizar peças de teste
+        async function carregarPecasTeste() {
+            console.log('🧪 TESTE: Iniciando carregamento de peças para navegação');
+            
+            const container = document.getElementById('test-cards-container');
+            
+            try {
+                // Buscar peças
+                const pecas = await fetchAllActivePieces();
+                
+                console.log('🧪 TESTE: Peças recebidas:', pecas);
+                
+                if (pecas.length === 0) {
+                    container.innerHTML = `
+                        <div class="alert alert-warning">
+                            <h5>Nenhuma peça encontrada</h5>
+                            <p>Não foi possível encontrar peças ativas no Supabase.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Renderizar cards usando a função existente
+                renderizarCardsPeca(pecas, container);
+                
+                console.log('🧪 TESTE: Cards renderizados com sucesso');
+                
+                // Adicionar informações de debug
+                const debugInfo = document.createElement('div');
+                debugInfo.className = 'alert alert-success mt-3';
+                debugInfo.innerHTML = `
+                    <h6>✅ Peças Carregadas: ${pecas.length}</h6>
+                    <div class="row">
+                        ${pecas.map((peca, index) => `
+                            <div class="col-md-6 mb-2">
+                                <small>
+                                    <strong>Peça ${index + 1}:</strong><br>
+                                    ID: <code>${peca.id}</code><br>
+                                    Título: ${peca.titulo}<br>
+                                    Slug: ${peca.slug || 'Sem slug'}
+                                </small>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(debugInfo);
+                
+            } catch (error) {
+                console.error('🧪 TESTE: Erro ao carregar peças:', error);
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        <h5>Erro ao carregar peças</h5>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🧪 TESTE: Página de navegação carregada');
+            
+            // Injetar configurações do site
+            if (window.injectSiteConfig) {
+                window.injectSiteConfig();
+            }
+            
+            // Carregar peças
+            carregarPecasTeste();
+        });
+    </script>
+</body>
+</html>

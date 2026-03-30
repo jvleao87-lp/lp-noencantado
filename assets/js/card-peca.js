@@ -135,18 +135,28 @@ class CardPeca {
     }
 
     /**
-     * Manipulador de clique no card - navega para página da peça
+     * Manipulador de clique no card - navega para página da peça - VERSÃO DEBUG
      */
     aoClicar() {
+        console.log('🔍 DEBUG: Card clicado!');
+        console.log('🔍 DEBUG: Peça no card:', this.peca);
+        console.log('🔍 DEBUG: ID da peça:', this.peca.id);
+        console.log('🔍 DEBUG: Título da peça:', this.peca.titulo);
+        console.log('🔍 DEBUG: Slug da peça:', this.peca.slug);
+        
         // Construir URL da página da peça
         let pecaUrl;
         
         // Priorizar slug se existir, senão usar ID
         if (this.peca.slug) {
             pecaUrl = `peca.html?slug=${encodeURIComponent(this.peca.slug)}`;
+            console.log('🔍 DEBUG: Usando slug na URL:', pecaUrl);
         } else {
             pecaUrl = `peca.html?id=${encodeURIComponent(this.peca.id)}`;
+            console.log('🔍 DEBUG: Usando ID na URL:', pecaUrl);
         }
+        
+        console.log('🔍 DEBUG: Navegando para:', pecaUrl);
         
         // Navegar para página da peça
         window.location.href = pecaUrl;
@@ -164,11 +174,15 @@ class CardPeca {
 }
 
 /**
- * Função utilitária para renderizar múltiplos cards
+ * Função utilitária para renderizar múltiplos cards - VERSÃO DEBUG
  * @param {Array} pecas - Array de peças
  * @param {HTMLElement} container - Container onde renderizar
  */
 function renderizarCardsPeca(pecas, container) {
+    console.log('🔍 DEBUG: renderizarCardsPeca iniciado');
+    console.log('🔍 DEBUG: Total de peças recebidas:', pecas.length);
+    console.log('🔍 DEBUG: Peças recebidas:', pecas);
+    
     // Limpar container
     container.innerHTML = '';
     
@@ -176,11 +190,21 @@ function renderizarCardsPeca(pecas, container) {
     const gridContainer = document.createElement('div');
     gridContainer.className = 'cards-peca-grid';
     
-    pecas.forEach(peca => {
-        new CardPeca(peca, gridContainer);
+    pecas.forEach((peca, index) => {
+        console.log(`🔍 DEBUG: Criando card ${index + 1}/${pecas.length}`);
+        console.log(`🔍 DEBUG: Peça ${index + 1}:`, {
+            id: peca.id,
+            titulo: peca.titulo,
+            slug: peca.slug
+        });
+        
+        const card = new CardPeca(peca, gridContainer);
+        console.log(`🔍 DEBUG: Card ${index + 1} criado com ID: ${card.peca.id}`);
     });
     
     container.appendChild(gridContainer);
+    
+    console.log('✅ DEBUG: Todos os cards renderizados no container');
 }
 
 /**

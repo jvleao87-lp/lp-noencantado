@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Galeria de Imagens</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Teste de Galeria de Imagens - Correção do Erro 400</h1>
+    
+    <div id="results"></div>
+    
+    <script src="assets/js/supabase-data.js"></script>
+    <script>
+        const results = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+        
+        function addLog(title, data) {
+            const div = document.createElement('div');
+            div.className = 'test-result info';
+            div.innerHTML = `<strong>${title}:</strong><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            results.appendChild(div);
+        }
+        
+        async function testImagensQuery() {
+            addResult('🧪 Iniciando teste da query de imagens...', 'info');
+            
+            try {
+                // Testar busca de peças para obter IDs
+                addResult('📡 Buscando peças ativas...', 'info');
+                const pecas = await fetchAllActivePieces();
+                
+                if (!pecas || pecas.length === 0) {
+                    addResult('❌ Nenhuma peça encontrada para testar', 'error');
+                    return;
+                }
+                
+                addResult(`✅ Encontradas ${pecas.length} peças para teste`, 'success');
+                addLog('Peças encontradas', pecas.map(p => ({ id: p.id, titulo: p.titulo })));
+                
+                // Testar busca individual de cada peça
+                for (let i = 0; i < Math.min(3, pecas.length); i++) {
+                    const peca = pecas[i];
+                    addResult(`🔍 Testando peça: ${peca.titulo} (ID: ${peca.id})`, 'info');
+                    
+                    try {
+                        const pecaCompleta = await fetchPecaByIdentifier(peca.id);
+                        
+                        if (pecaCompleta) {
+                            addResult(`✅ Peça ${peca.titulo} carregada com sucesso`, 'success');
+                            addLog('Dados da peça', {
+                                id: pecaCompleta.id,
+                                titulo: pecaCompleta.titulo,
+                                total_imagens: pecaCompleta.pecas_imagens?.length || 0,
+                                imagens: pecaCompleta.pecas_imagens?.map(img => ({
+                                    url: img.url,
+                                    categoria: img.categoria
+                                })) || []
+                            });
+                        } else {
+                            addResult(`❌ Falha ao carregar peça ${peca.titulo}`, 'error');
+                        }
+                    } catch (pecaError) {
+                        addResult(`❌ Erro ao carregar peça ${peca.titulo}: ${pecaError.message}`, 'error');
+                        addLog('Erro da peça', {
+                            message: pecaError.message,
+                            stack: pecaError.stack
+                        });
+                    }
+                }
+                
+                addResult('🎉 Teste concluído!', 'success');
+                
+            } catch (error) {
+                addResult(`❌ Erro geral no teste: ${error.message}`, 'error');
+                addLog('Erro geral', {
+                    message: error.message,
+                    stack: error.stack
+                });
+            }
+        }
+        
+        // Iniciar teste quando carregar a página
+        document.addEventListener('DOMContentLoaded', testImagensQuery);
+    </script>
+</body>
+</html>

@@ -5,6 +5,7 @@
 
 class PecaPage {
     constructor() {
+        console.log('🔍 DEBUG: Nova instância de PecaPage criada');
         this.peca = null;
         this.imagens = [];
         this.imagemAtual = 0;
@@ -123,8 +124,26 @@ class PecaPage {
 
             // Processar imagens
             console.log('🔍 DEBUG: Processando imagens...');
-            this.imagens = this.processarImagens(this.peca.pecas_imagens);
-            console.log('✅ DEBUG: Imagens processadas:', this.imagens.length, 'imagens');
+            console.log('🔍 DEBUG: Dados brutos de imagens da peça:', this.peca.pecas_imagens);
+            
+            try {
+                this.imagens = this.processarImagens(this.peca.pecas_imagens);
+                console.log('✅ DEBUG: Imagens processadas com sucesso:', {
+                    total_imagens: this.imagens.length,
+                    primeira_imagem: this.imagens[0]?.url,
+                    todas_imagens: this.imagens.map(img => img.url)
+                });
+            } catch (imgError) {
+                console.error('❌ DEBUG: Erro ao processar imagens:', imgError);
+                console.error('❌ DEBUG: Stack do erro de imagens:', imgError.stack);
+                // Continuar com fallback mesmo se der erro no processamento
+                this.imagens = [{
+                    url: this.peca.imagem || 'assets/images/bags.jpg',
+                    alt: this.peca.titulo,
+                    categoria: 'principal'
+                }];
+                console.log('🔍 DEBUG: Usando fallback devido a erro no processamento');
+            }
             
         } catch (error) {
             console.error('❌ DEBUG: Erro ao carregar peça:', error);
@@ -149,47 +168,85 @@ class PecaPage {
      * Processa e ordena as imagens da peça
      */
     processarImagens(pecasImagens) {
+        console.log('🔍 DEBUG: Processando imagens da peça:', {
+            pecas_imagens: pecasImagens,
+            total_bruto: pecasImagens?.length || 0
+        });
+
         if (!pecasImagens || pecasImagens.length === 0) {
-            // Imagem fallback
+            console.log('⚠️ DEBUG: Nenhuma imagem encontrada, usando fallback');
+            // Imagem fallback específica da peça ou fallback global
+            const fallbackUrl = this.peca.imagem || 'assets/images/bags.jpg';
+            console.log('🔍 DEBUG: Usando imagem fallback:', fallbackUrl);
+            
             return [{
-                url: this.peca.imagem || 'assets/images/bags.jpg',
+                url: fallbackUrl,
                 alt: this.peca.titulo,
-                ordem: 0
+                categoria: 'principal'
             }];
         }
 
-        // Ordenar por ordem, senão manter ordem original
-        return pecasImagens
-            .map(img => ({
+        // Processar imagens sem usar coluna ordem (que não existe)
+        const imagensProcessadas = pecasImagens.map((img, index) => {
+            console.log(`🔍 DEBUG: Processando imagem ${index + 1}:`, {
+                url: img.url,
+                categoria: img.categoria
+            });
+            
+            return {
                 url: img.url,
                 alt: img.categoria || this.peca.titulo,
-                ordem: img.ordem || 0
+                categoria: img.categoria || 'geral',
+                ordem: index // usar índice como ordem para manter consistência
+            };
+        });
+
+        console.log('✅ DEBUG: Imagens processadas com sucesso:', {
+            total_processadas: imagensProcessadas.length,
+            imagens: imagensProcessadas.map(img => ({
+                url: img.url,
+                categoria: img.categoria,
+                ordem: img.ordem
             }))
-            .sort((a, b) => a.ordem - b.ordem);
+        });
+
+        // Ordenar pelo índice (ordem simulada)
+        return imagensProcessadas.sort((a, b) => a.ordem - b.ordem);
     }
 
     /**
-     * Renderiza os dados da peça na página
+     * Renderiza os dados da peça na página - VERSÃO DEBUG
      */
     renderPeca() {
+        console.log('🔍 DEBUG: renderPeca iniciado');
+        console.log('🔍 DEBUG: Peça a ser renderizada:', this.peca);
+        console.log('🔍 DEBUG: ID da peça:', this.peca.id);
+        console.log('🔍 DEBUG: Título da peça:', this.peca.titulo);
+        console.log('🔍 DEBUG: Imagens da peça:', this.imagens);
+        
         // Título da página
         document.title = `${this.peca.titulo} | Nó Encantado`;
         document.getElementById('page-title').textContent = `${this.peca.titulo} | Nó Encantado`;
+        console.log('🔍 DEBUG: Título da página atualizado para:', document.title);
         
         // Breadcrumb
         document.getElementById('peca-breadcrumb').textContent = this.peca.titulo;
+        console.log('🔍 DEBUG: Breadcrumb atualizado para:', this.peca.titulo);
         
         // Informações principais
         document.getElementById('peca-titulo').textContent = this.peca.titulo;
         document.getElementById('peca-descricao').textContent = this.peca.descricao || 'Peça única feita com amor e dedicação.';
+        console.log('🔍 DEBUG: Título e descrição atualizados');
         
         // Categoria
         const categoriaEl = document.getElementById('peca-categoria');
         if (this.peca.colecoes) {
             categoriaEl.textContent = `${this.peca.colecoes.emoji} ${this.peca.colecoes.nome}`;
             categoriaEl.style.display = 'inline-block';
+            console.log('🔍 DEBUG: Categoria atualizada:', this.peca.colecoes.nome);
         } else {
             categoriaEl.style.display = 'none';
+            console.log('🔍 DEBUG: Peça não tem coleção, categoria escondida');
         }
         
         // Disponibilidade
@@ -197,18 +254,24 @@ class PecaPage {
         if (this.peca.disponivel !== false) {
             disponibilidadeEl.textContent = '✓ Disponível para encomenda';
             disponibilidadeEl.className = 'peca-disponibilidade';
+            console.log('🔍 DEBUG: Peça marcada como disponível');
         } else {
             disponibilidadeEl.textContent = '✗ Indisponível';
             disponibilidadeEl.className = 'peca-disponibilidade indisponivel';
+            console.log('🔍 DEBUG: Peça marcada como indisponível');
         }
         
         // Imagem principal
         const mainImage = document.getElementById('main-image');
         mainImage.src = this.imagens[0].url;
         mainImage.alt = this.imagens[0].alt;
+        console.log('🔍 DEBUG: Imagem principal atualizada:', this.imagens[0].url);
         
         // Renderizar miniaturas
+        console.log('🔍 DEBUG: Renderizando miniaturas...');
         this.renderMiniaturas();
+        
+        console.log('✅ DEBUG: renderPeca concluído com sucesso');
     }
 
     /**
