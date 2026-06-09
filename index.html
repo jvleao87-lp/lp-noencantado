@@ -1,505 +1,671 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Calculadora de Preço para Crochê</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f1ea;
-      padding: 30px;
-      color: #333;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Peças de crochê feitas à mão com carinho em Pernambuco. Bolsas, tops e acessórios artesanais criados por Anna Beatriz.">
+    <meta name="keywords" content="crochê, peças de crochê, crochê em Pernambuco, crochê artesanal, peças feitas à mão, bolsas de crochê, Nó Encantado, Anna Beatriz crochê, artesanato pernambucano, crochê feito à mão">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Nó Encantado">
+    <meta name="theme-color" content="#E6B8A2">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://noencantado.shop/">
+    <meta property="og:title" content="Nó Encantado | Crochê artesanal pernambucano">
+    <meta property="og:description" content="Crochê feito à mão, com um toque de magia ✨">
+    <meta property="og:image" content="https://noencantado.shop/img/preview.jpg">
+    <meta property="og:site_name" content="Nó Encantado">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://noencantado.shop/">
+    <meta name="twitter:title" content="Nó Encantado | Crochê artesanal pernambucano">
+    <meta name="twitter:description" content="Crochê feito à mão, com um toque de magia ✨">
+    <meta name="twitter:image" content="https://noencantado.shop/img/preview.jpg">
+    <meta name="twitter:site" content="@_noencantado">
+    
+    <!-- Dados Estruturados JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["LocalBusiness", "Store"],
+      "name": "Nó Encantado",
+      "image": "https://noencantado.shop/img/preview.jpg",
+      "description": "Peças de crochê feitas à mão em Pernambuco",
+      "url": "https://noencantado.shop",
+      "telephone": "+5581952325974",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Pernambuco",
+        "addressRegion": "PE",
+        "addressCountry": "BR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "-8.047562",
+        "longitude": "-34.877002"
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday"
+        ],
+        "opens": "09:00",
+        "closes": "18:00"
+      },
+      "priceRange": "R$",
+      "sameAs": [
+        "https://instagram.com/_noencantado",
+        "https://api.whatsapp.com/send?phone=5581952325974"
+      ]
     }
-
-    .container {
-      max-width: 620px;
-      margin: auto;
-      background: #fff;
-      padding: 25px;
-      border-radius: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-    }
-
-    h1 {
-      text-align: center;
-      color: #8b5e3c;
-      margin-bottom: 8px;
-    }
-
-    .descricao {
-      text-align: center;
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 25px;
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-
-    .grupo-radio {
-      margin-top: 8px;
-      padding: 12px;
-      background: #faf6f1;
-      border-radius: 10px;
-      border: 1px solid #e4d2bf;
-    }
-
-    .opcao {
-      display: block;
-      margin: 8px 0;
-      font-weight: normal;
-      cursor: pointer;
-    }
-
-    .opcao input {
-      margin-right: 8px;
-    }
-
-    small {
-      display: block;
-      margin-top: 4px;
-      color: #777;
-      font-size: 12px;
-    }
-
-    .campo-condicional {
-      display: none;
-      margin-top: 10px;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 22px;
-      padding: 13px;
-      background: #8b5e3c;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #70492e;
-    }
-
-    /* Modal centralizado */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.55);
-      z-index: 999;
-      padding: 20px;
-      box-sizing: border-box;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-overlay.ativo {
-      display: flex;
-    }
-
-    .modal {
-      width: 100%;
-      max-width: 520px;
-      max-height: 90vh;
-      background: #fff;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-      animation: aparecer 0.25s ease;
-    }
-
-    @keyframes aparecer {
-      from {
-        opacity: 0;
-        transform: translateY(-15px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "Peças de Crochê Artesanal",
+      "image": [
+        "https://noencantado.shop/img/bolsa-croche.jpg",
+        "https://noencantado.shop/img/top-croche.jpg",
+        "https://noencantado.shop/img/acessorios-croche.jpg"
+      ],
+      "description": "Peças únicas de crochê feitas à mão em Pernambuco, incluindo bolsas, tops e acessórios personalizados.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Nó Encantado"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://noencantado.shop",
+        "priceCurrency": "BRL",
+        "priceValidUntil": "2025-12-31",
+        "itemCondition": "https://schema.org/NewCondition",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Nó Encantado"
+        }
+      },
+      "review": {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "5",
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Cliente Satisfeito"
+        },
+        "reviewBody": "Peças lindas e bem feitas, recomendo muito!"
       }
     }
-
-    .modal-header {
-      background: #8b5e3c;
-      color: white;
-      padding: 16px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-header h2 {
-      margin: 0;
-      font-size: 20px;
-    }
-
-    .fechar {
-      background: transparent;
-      border: none;
-      color: white;
-      font-size: 28px;
-      cursor: pointer;
-      width: auto;
-      margin: 0;
-      padding: 0;
-      line-height: 1;
-    }
-
-    .fechar:hover {
-      background: transparent;
-    }
-
-    .modal-body {
-      padding: 20px;
-      line-height: 1.6;
-      background: #fdf8f3;
-      max-height: 65vh;
-      overflow-y: auto;
-    }
-
-    .linha {
-      border-top: 1px solid #d3b99f;
-      margin: 12px 0;
-    }
-
-    .preco-final {
-      display: block;
-      margin-top: 14px;
-      padding: 14px;
-      background: #f2e2d2;
-      border-radius: 10px;
-      font-size: 26px;
-      font-weight: bold;
-      color: #5c351e;
-      text-align: center;
-    }
-
-    .modal-footer {
-      padding: 15px 20px;
-      background: #fff;
-    }
-
-    .botao-fechar {
-      background: #8b5e3c;
-      margin-top: 0;
-    }
-
-    .erro {
-      color: #8b1e1e;
-      font-weight: bold;
-    }
-
-    @media (max-width: 480px) {
-      body {
-        padding: 15px;
-      }
-
-      .container {
-        padding: 20px;
-      }
-
-      .modal {
-        max-width: 100%;
-      }
-
-      .preco-final {
-        font-size: 22px;
-      }
-    }
-  </style>
+    </script>
+    
+    <title>Nó Encantado | Crochê artesanal feito à mão em Pernambuco</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <link rel="canonical" href="https://noencantado.shop/">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@300;400;600&family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link href="assets/css/style.css" rel="stylesheet">
 </head>
+<body data-bs-spy="scroll" data-bs-target="#navbarNav" data-bs-offset="130" tabindex="0">
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/images/logo-no-encantado.png" alt="Nó Encantado" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#como-encomendar">Como Encomendar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#galeria">Peças em Destaque</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#nossas-pecas">Nossas Peças</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#sobre">Sobre</a>
+                    </li>
+                    <li class="nav-item d-lg-none">
+                        <a class="nav-link" href="/pages/cotacao.html">Solicitar Cotação</a>
+                    </li>
+                    <li class="nav-item d-none d-lg-block">
+                        <a href="/pages/cotacao.html" class="nav-link">Solicitar Cotação</a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <a href="#" data-whatsapp-link class="btn btn-primary ms-lg-3" target="_blank">
+                            Fazer minha encomenda ✨
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<body>
+    <!-- Hero Section -->
+    <header class="hero-section" id="inicio">
+        <div class="hero-overlay"></div>
+        <div class="container h-100 position-relative">
+            <div class="row h-100 align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="hero-title">Existe um pouco de magia em cada ponto que fazemos.</h1>
+                    <p class="hero-subtitle">No Nó Encantado, o crochê ganha alma, cor e significado.
+Cada criação é única, feita sob medida para quem acredita no poder do encantamento. 💫</p>
+                    <div class="hero-buttons d-flex flex-column flex-sm-row justify-content-center gap-3">
+                        <a href="#galeria" class="btn btn-outline-light btn-lg px-4">
+                            Ver coleção
+                        </a>
+                        <a href="#" data-whatsapp-link class="btn btn-primary btn-lg px-4" target="_blank">
+                            Encomendar minha peça exclusiva
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-down">
+                <a href="#galeria">
+                    <i class="fas fa-chevron-down"></i>
+                </a>
+            </div>
+        </div>
+    </header>
 
-  <div class="container">
-    <h1>Calculadora de Crochê</h1>
-    <p class="descricao">
-      Calcule o preço da sua peça considerando material, tempo, mão de obra,
-      complexidade, acabamento e custos extras.
-    </p>
+    <!-- Galeria Section -->
+<!-- Galeria Section -->
+<section class="py-5 bg-light" id="galeria">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Peças em Destaque</h2>
+            <p class="lead">
+                Peças que carregam histórias, texturas e sentimentos. Do fio ao último ponto,
+                cada detalhe é pensado para valorizar sua beleza e seu estilo único.
+            </p>
+        </div>
 
-    <label>Nome da peça</label>
-    <input type="text" id="peca" placeholder="Ex: Bolsa pequena">
+        <!-- Simple Grid for All Screen Sizes -->
+        <div class="row g-4" id="featured-pieces-grid">
+            <!-- Conteúdo dinâmico do Supabase -->
+        </div>
 
-    <label>Custo dos materiais R$</label>
-    <input type="number" id="material" placeholder="Ex: 20" step="0.01">
-
-    <label>Tempo de produção em horas</label>
-    <input type="number" id="tempo" placeholder="Ex: 2" step="0.1">
-
-    <label>Categoria da sua hora de trabalho</label>
-    <div class="grupo-radio">
-      <label class="opcao">
-        <input type="radio" name="valorHora" value="20" checked>
-        Iniciante
-      </label>
-
-      <label class="opcao">
-        <input type="radio" name="valorHora" value="30">
-        Intermediário
-      </label>
-
-      <label class="opcao">
-        <input type="radio" name="valorHora" value="40">
-        Avançado
-      </label>
+        <div class="text-center mt-4">
+            <a href="#" data-whatsapp-link class="btn btn-primary btn-lg" target="_blank">
+                <i class="fab fa-whatsapp me-2"></i>Encomendar Agora
+            </a>
+        </div>
     </div>
-    <small>Use a categoria de acordo com sua experiência, acabamento e segurança na produção.</small>
+</section>
 
-    <label>Complexidade da peça</label>
-    <div class="grupo-radio">
-      <label class="opcao">
-        <input type="radio" name="complexidade" value="0" checked>
-        Simples
-      </label>
+    <!-- Coleção de Verão Section -->
+    <section class="py-5 bg-light" id="colecao-verao">
+        <div class="container">
+            <div class="row g-4 align-items-start">
+                <!-- Coluna Esquerda: Vídeo -->
+                <div class="col-12 col-lg-4">
+                    <div class="ratio ratio-9x16">
+                        <video class="w-100 h-100" autoplay loop muted playsinline poster="assets/images/verao1.jpeg">
+                            <source src="assets/images/verao.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+                </div>
+                <!-- Coluna Direita: Carrossel -->
+                <div class="col-12 col-lg-8">
+                    <div class="mb-3 text-start">
+                        <h2 class="section-title m-0">Coleção de Verão</h2>
+                        <p class="lead section-intro mt-2 mb-3">A nova coleção celebra o calor, a liberdade e a energia do verão pernambucano.</p>
+                    </div>
+                    <div class="swiper summer-swiper">
+                        <div class="swiper-wrapper">
+                            <!-- Slides das imagens de verão -->
+                            <div class="swiper-slide">
+                                <div class="ratio ratio-9x16 mb-3">
+                                    <img loading="lazy" src="assets/images/verao1.jpeg" alt="Coleção Verão 1" class="w-100 h-100 object-fit-cover">
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ratio ratio-9x16 mb-3">
+                                    <img loading="lazy" src="assets/images/verao2.jpeg" alt="Coleção Verão 2" class="w-100 h-100 object-fit-cover">
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ratio ratio-9x16 mb-3">
+                                    <img loading="lazy" src="assets/images/verao3.jpeg" alt="Coleção Verão 3" class="w-100 h-100 object-fit-cover">
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ratio ratio-9x16 mb-3">
+                                    <img loading="lazy" src="assets/images/verao4.jpeg" alt="Coleção Verão 4" class="w-100 h-100 object-fit-cover">
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ratio ratio-9x16 mb-3">
+                                    <img loading="lazy" src="assets/images/verao5.jpeg" alt="Coleção Verão 5" class="w-100 h-100 object-fit-cover">
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ratio ratio-9x16 mb-3">
+                                    <img loading="lazy" src="assets/images/verao6.jpeg" alt="Coleção Verão 6" class="w-100 h-100 object-fit-cover">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      <label class="opcao">
-        <input type="radio" name="complexidade" value="15">
-        Média
-      </label>
+    <!-- Como Encomendar Section -->
+    <section class="py-5" id="como-encomendar">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Como Encomendar</h2>
+                <p class="lead">Encomendar sua peça é simples e especial. Você escolhe o modelo, define os detalhes e nós criamos algo feito só pra você. Um processo artesanal, leve e cheio de significado.</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>Escolha o Modelo</h3>
+                        <p>Navegue pela nossa galeria e escolha o modelo que mais combina com você.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h3>Personalize</h3>
+                        <p>Escolha as cores e detalhes para deixar sua peça ainda mais especial.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h3>Encomende</h3>
+                        <p>Entre em contato pelo WhatsApp para finalizar seu pedido.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="#" data-whatsapp-link class="btn btn-primary btn-lg" target="_blank">
+                    <i class="fab fa-whatsapp me-2"></i>Fazer Pedido pelo WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- Nossas Peças (Grid) -->
+    <section class="py-5 bg-light" id="nossas-pecas">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Nossas Peças</h2>
+                <p class="lead text-muted">Explore nosso catálogo completo de criações artesanais</p>
+            </div>
+            <div id="all-pieces-container">
+                <!-- Todas as peças serão carregadas dinamicamente do Supabase -->
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button id="load-more-pieces" class="btn btn-primary" onclick="loadMorePieces()" style="display: none;">
+                    Mostrar mais
+                </button>
+            </div>
+        </div>
+    </section>
 
-      <label class="opcao">
-        <input type="radio" name="complexidade" value="30">
-        Alta
-      </label>
+    <!-- Sobre a Criadora -->
+    <section class="py-5 bg-light" id="sobre">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6">
+                    <div class="about-image-container">
+                        <img src="assets/images/anna-beatriz.png" alt="Anna Beatriz - Artesã do Nó Encantado" class="img-fluid rounded shadow">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="section-title mb-4">Sobre a Criadora</h2>
+                    <p class="lead text-muted mb-4">Sou Anna Beatriz, artesã pernambucana e criadora do Nó Encantado. Desde criança, o crochê me acompanha como forma de amor e expressão. Hoje, transformo fios em peças que aquecem, acolhem e contam histórias. Cada criação é feita com calma, propósito e o desejo de espalhar um pouquinho de encanto pelo mundo. 🌷</p>
+                        
+                        <div class="d-flex mb-3">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div>
+                                <h4 class="h5 mb-2">Minha História</h4>
+                                <p class="mb-0">Aprendi a arte do crochê com minha avó e desde então não parei mais. Cada peça que crio carrega um pedacinho da minha história e do meu amor por esse trabalho.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex mb-3">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div>
+                                <h4 class="h5 mb-2">Inspiração</h4>
+                                <p class="mb-0">Me inspiro nas cores e na cultura de Pernambuco para criar peças únicas que representem nossa identidade.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex mb-4">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-hands-helping"></i>
+                            </div>
+                            <div>
+                                <h4 class="h5 mb-2">Compromisso</h4>
+                                <p class="mb-0">Meu maior objetivo é ver meus clientes felizes e satisfeitos com peças que levam conforto e estilo para o dia a dia.</p>
+                            </div>
+                        </div>
+                        <a href="#como-encomendar" class="btn btn-primary">Fazer uma Encomenda</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sobre o Nó Encantado -->
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-10">
+                    <div class="card border-0 shadow-sm p-4 p-lg-5">
+                        <div class="text-center mb-4">
+                            <h2 class="section-title">Sobre o Nó Encantado</h2>
+                            <p class="lead text-muted">Peças únicas feitas com amor em Pernambuco</p>
+                        </div>
+                        <div class="px-lg-4">
+                            <p class="mb-4">O Nó Encantado nasceu do amor pelo artesanato e pela vontade de criar peças que contam histórias. Cada ponto de crochê é feito com carinho e dedicação, transformando fios em peças únicas e especiais que carregam em si a essência da cultura pernambucana e o calor do trabalho manual.</p>
+                            
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <div class="d-flex">
+                                        <div class="me-3 text-primary">
+                                            <i class="fas fa-check-circle fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="h5 mb-2">Técnica Artesanal</h4>
+                                            <p class="mb-0">Cada peça é confeccionada à mão, garantindo qualidade e exclusividade em cada ponto do crochê.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex">
+                                        <div class="me-3 text-primary">
+                                            <i class="fas fa-check-circle fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="h5 mb-2">Design Exclusivo</h4>
+                                            <p class="mb-0">Criações que combinam técnicas tradicionais com um toque contemporâneo e único.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex">
+                                        <div class="me-3 text-primary">
+                                            <i class="fas fa-check-circle fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="h5 mb-2">Personalização</h4>
+                                            <p class="mb-0">Peças únicas que podem ser personalizadas de acordo com o seu estilo e preferência.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <a href="#" data-whatsapp-link class="btn btn-light btn-lg" target="_blank">
+                    <i class="fab fa-whatsapp me-2"></i> Falar no WhatsApp
+                </a>
+                <a href="#" data-instagram-link class="btn btn-light btn-lg" target="_blank">
+                    <i class="fab fa-instagram me-2"></i> Ver Instagram
+                </a>
+            </div>
+        </div>
+    </section>
 
-      <label class="opcao">
-        <input type="radio" name="complexidade" value="50">
-        Muito trabalhosa / personalizada
-      </label>
+    <!-- Footer -->
+    <footer class="site-footer" id="footer">
+        <div class="container py-2">
+            <div class="footer-row">
+                <div class="footer-left">
+                    <img src="assets/images/logo-no-encantado.png" alt="Nó Encantado" class="footer-logo mb-1">
+                    <div class="footer-social">
+                        <a href="#" data-instagram-link target="_blank" rel="noopener" aria-label="Instagram" class="social-link me-1">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" data-whatsapp-link target="_blank" rel="noopener" aria-label="WhatsApp" class="social-link">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+                <p class="footer-copy m-0"><em>© 2025 Nó Encantado — Crochê feito à mão com amor 🧶✨</em> · <span class="footer-made">Feito por Anna Beatriz</span></p>
+                <div class="footer-right">
+                    <a href="#" data-whatsapp-link target="_blank" rel="noopener" class="btn footer-cta">💌 Fazer minha encomenda</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Gallery Modal -->
+    <div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                    <h5 class="modal-title" id="galleryModalLabel">Galeria</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3" id="modal-gallery">
+                        <!-- Images will be loaded here via JavaScript -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" data-whatsapp-link class="btn btn-primary" target="_blank">
+                        <i class="fab fa-whatsapp me-2"></i>Encomendar
+                    </a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <label>Tem trabalho com acabamento?</label>
-    <div class="grupo-radio">
-      <label class="opcao">
-        <input type="radio" name="temAcabamento" value="nao" checked onchange="mostrarCampoAcabamento()">
-        Não
-      </label>
+    <!-- Floating WhatsApp (Mobile only) -->
+    <a
+      href="#" data-whatsapp-link
+      class="floating-whatsapp d-lg-none"
+      target="_blank"
+      rel="noopener"
+      aria-label="Conversar no WhatsApp"
+    >
+      <i class="fab fa-whatsapp"></i>
+    </a>
 
-      <label class="opcao">
-        <input type="radio" name="temAcabamento" value="sim" onchange="mostrarCampoAcabamento()">
-        Sim
-      </label>
-    </div>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/site-config.js"></script>
+    <script src="assets/js/supabase-data.js"></script>
+    <script src="assets/js/card-peca.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    
+    <script>
+        // Inicialização dos Swipers
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicialização do Swiper da Coleção de Verão
+            const summerSwiper = new Swiper('.summer-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                watchSlidesProgress: true,
+                observer: true,
+                observeParents: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true
+                },
+                pagination: {
+                    el: '.summer-swiper .swiper-pagination',
+                    clickable: true,
+                    dynamicBullets: true
+                },
+                navigation: {
+                    nextEl: '.summer-swiper .swiper-button-next',
+                    prevEl: '.summer-swiper .swiper-button-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 1.5,
+                        spaceBetween: 20
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 25
+                    },
+                    992: {
+                        slidesPerView: 2.5,
+                        spaceBetween: 30
+                    },
+                    1200: {
+                        slidesPerView: 3,
+                        spaceBetween: 30
+                    }
+                },
+                on: {
+                    init: function() {
+                        this.slides.forEach(slide => {
+                            slide.style.opacity = '1';
+                        });
+                    }
+                }
+            });
 
-    <div id="campoAcabamento" class="campo-condicional">
-      <label>Custo do acabamento R$</label>
-      <input type="number" id="acabamento" placeholder="Ex: 20" step="0.01">
-      <small>Inclua forro, alça, botão, zíper, etiqueta, costura, arremates e montagem.</small>
-    </div>
+            // Recalcular tamanhos após o carregamento das imagens e da janela
+            const summerImages = document.querySelectorAll('.summer-swiper img');
+            summerImages.forEach(img => {
+                if (img.complete) return; // já carregada
+                img.addEventListener('load', () => {
+                    summerSwiper.update();
+                });
+            });
+            window.addEventListener('load', () => {
+                summerSwiper.update();
+            });
 
-    <label>Tem custos extras?</label>
-    <div class="grupo-radio">
-      <label class="opcao">
-        <input type="radio" name="temCustosExtras" value="nao" checked onchange="mostrarCampoCustosExtras()">
-        Não
-      </label>
+            // Preloader removido
 
-      <label class="opcao">
-        <input type="radio" name="temCustosExtras" value="sim" onchange="mostrarCampoCustosExtras()">
-        Sim
-      </label>
-    </div>
+            // ScrollSpy: atualiza item ativo do navbar conforme a rolagem
+            if (bootstrap && bootstrap.ScrollSpy) {
+                const scrollSpy = new bootstrap.ScrollSpy(document.body, {
+                    target: '#navbarNav',
+                    offset: 100
+                });
+                // Atualiza após redimensionamento (altura do header pode mudar)
+                window.addEventListener('resize', () => scrollSpy.refresh());
+            }
 
-    <div id="campoCustosExtras" class="campo-condicional">
-      <label>Custos extras R$</label>
-      <input type="number" id="custosExtras" placeholder="Ex: 10" step="0.01">
-      <small>Inclua embalagem, taxa da plataforma, transporte, energia, divulgação ou comissão.</small>
-    </div>
+            // Gallery modal
+            const galleryModal = document.getElementById('galleryModal');
+            if (galleryModal) {
+                galleryModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const category = button.getAttribute('data-category');
+                    const modalTitle = galleryModal.querySelector('.modal-title');
+                    const modalGallery = document.getElementById('modal-gallery');
+                    
+                    // Atualiza o título do modal
+                    modalTitle.textContent = button.querySelector('h3').textContent;
+                    
+                    // Limpa as imagens atuais
+                    modalGallery.innerHTML = '';
+                    
+                    // Adiciona as imagens da categoria selecionada
+                    // Aqui você pode adicionar a lógica para carregar as imagens dinamicamente
+                    // Exemplo:
+                    // const images = getImagesByCategory(category);
+                    // images.forEach(image => {
+                    //     const img = document.createElement('img');
+                    //     img.src = image.src;
+                    //     img.alt = image.alt;
+                    //     img.className = 'img-fluid';
+                    //     modalGallery.appendChild(img);
+                    // });
+                });
+            }
+        });
+    </script>
 
-    <label>Categoria de venda</label>
-    <div class="grupo-radio">
-      <label class="opcao">
-        <input type="radio" name="multiplicador" value="2" checked>
-        Sob encomenda
-      </label>
-
-      <label class="opcao">
-        <input type="radio" name="multiplicador" value="1.4">
-        Família e amigos
-      </label>
-
-      <label class="opcao">
-        <input type="radio" name="multiplicador" value="1.6">
-        Peça de estoque
-      </label>
-    </div>
-
-    <button onclick="calcularPreco()">Calcular preço</button>
-  </div>
-
-  <div class="modal-overlay" id="modalResultado">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Resultado do cálculo</h2>
-        <button class="fechar" onclick="fecharModal()">&times;</button>
-      </div>
-
-      <div class="modal-body" id="conteudoResultado"></div>
-
-      <div class="modal-footer">
-        <button class="botao-fechar" onclick="fecharModal()">Fechar</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    function formatarMoeda(valor) {
-      return valor.toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL"
-      });
+    <!-- Dados Estruturados para SEO (Schema.org) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Nó Encantado",
+        "image": "https://www.noencantado.com.br/assets/images/logo-no-encantado.png",
+        "description": "Peças de crochê artesanal feitas à mão em Pernambuco com amor e dedicação pela artesã Anna Beatriz.",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Pernambuco",
+            "addressRegion": "PE",
+            "addressCountry": "BR"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "-8.047562",
+            "longitude": "-34.877044"
+        },
+        "url": "https://www.noencantado.com.br/",
+        "telephone": "+5581952325974",
+        "priceRange": "R$",
+        "openingHoursSpecification": [
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday"
+                ],
+                "opens": "09:00",
+                "closes": "18:00"
+            }
+        ],
+        "sameAs": [
+            "https://www.instagram.com/_noencantado",
+            "https://wa.me/5581952325974"
+        ]
     }
-
-    function pegarValor(id) {
-      return Number(document.getElementById(id).value) || 0;
-    }
-
-    function pegarRadio(nome) {
-      const selecionado = document.querySelector(`input[name="${nome}"]:checked`);
-      return selecionado ? selecionado.value : null;
-    }
-
-    function pegarTextoRadio(nome) {
-      const selecionado = document.querySelector(`input[name="${nome}"]:checked`);
-      return selecionado ? selecionado.parentElement.textContent.trim() : "";
-    }
-
-    function mostrarCampoAcabamento() {
-      const temAcabamento = pegarRadio("temAcabamento");
-      const campo = document.getElementById("campoAcabamento");
-
-      if (temAcabamento === "sim") {
-        campo.style.display = "block";
-      } else {
-        campo.style.display = "none";
-        document.getElementById("acabamento").value = "";
-      }
-    }
-
-    function mostrarCampoCustosExtras() {
-      const temCustosExtras = pegarRadio("temCustosExtras");
-      const campo = document.getElementById("campoCustosExtras");
-
-      if (temCustosExtras === "sim") {
-        campo.style.display = "block";
-      } else {
-        campo.style.display = "none";
-        document.getElementById("custosExtras").value = "";
-      }
-    }
-
-    function abrirModal() {
-      document.getElementById("modalResultado").classList.add("ativo");
-    }
-
-    function fecharModal() {
-      document.getElementById("modalResultado").classList.remove("ativo");
-    }
-
-    function calcularPreco() {
-      const peca = document.getElementById("peca").value || "Sem nome";
-
-      const material = pegarValor("material");
-      const tempo = pegarValor("tempo");
-
-      const valorHora = Number(pegarRadio("valorHora"));
-      const complexidade = Number(pegarRadio("complexidade"));
-      const multiplicador = Number(pegarRadio("multiplicador"));
-
-      const categoriaHora = pegarTextoRadio("valorHora");
-      const categoriaComplexidade = pegarTextoRadio("complexidade");
-      const categoriaVenda = pegarTextoRadio("multiplicador");
-
-      const temAcabamento = pegarRadio("temAcabamento");
-      const temCustosExtras = pegarRadio("temCustosExtras");
-
-      const acabamento = temAcabamento === "sim" ? pegarValor("acabamento") : 0;
-      const custosExtras = temCustosExtras === "sim" ? pegarValor("custosExtras") : 0;
-
-      if (material <= 0 || tempo <= 0) {
-        document.getElementById("conteudoResultado").innerHTML = `
-          <p class="erro">
-            Preencha pelo menos o custo dos materiais e o tempo de produção.
-          </p>
-        `;
-
-        abrirModal();
-        return;
-      }
-
-      const maoDeObra = tempo * valorHora;
-
-      const subtotal =
-        material +
-        maoDeObra +
-        complexidade +
-        acabamento +
-        custosExtras;
-
-      const precoFinal = subtotal * multiplicador;
-      const margemComercial = precoFinal - subtotal;
-
-      document.getElementById("conteudoResultado").innerHTML = `
-        <strong>Peça:</strong> ${peca}<br>
-        <strong>Categoria da hora:</strong> ${categoriaHora}<br>
-        <strong>Complexidade:</strong> ${categoriaComplexidade}<br>
-        <strong>Categoria de venda:</strong> ${categoriaVenda}<br>
-
-        <div class="linha"></div>
-
-        <strong>Material:</strong> ${formatarMoeda(material)}<br>
-        <strong>Mão de obra:</strong> ${formatarMoeda(maoDeObra)}<br>
-        <strong>Complexidade:</strong> ${formatarMoeda(complexidade)}<br>
-        <strong>Acabamento:</strong> ${formatarMoeda(acabamento)}<br>
-        <strong>Custos extras:</strong> ${formatarMoeda(custosExtras)}<br>
-
-        <div class="linha"></div>
-
-        <strong>Subtotal:</strong> ${formatarMoeda(subtotal)}<br>
-        <strong>Margem comercial estimada:</strong> ${formatarMoeda(margemComercial)}<br>
-
-        <span class="preco-final">
-          Preço sugerido: ${formatarMoeda(precoFinal)}
-        </span>
-      `;
-
-      abrirModal();
-    }
-
-    window.onclick = function(event) {
-      const modal = document.getElementById("modalResultado");
-
-      if (event.target === modal) {
-        fecharModal();
-      }
-    }
-
-    document.addEventListener("keydown", function(event) {
-      if (event.key === "Escape") {
-        fecharModal();
-      }
-    });
-  </script>
-
+    </script>
 </body>
 </html>
